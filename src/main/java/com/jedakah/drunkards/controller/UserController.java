@@ -2,8 +2,9 @@ package com.jedakah.drunkards.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.UserManager;
+import com.jedakah.drunkards.to.user.CreateUserRequest;
+import com.jedakah.drunkards.to.user.GetUserResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,29 +24,29 @@ public class UserController {
 
     @RequestMapping(value = "", method = RequestMethod.POST,
         consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<GetUserResponse> createUser(@RequestBody CreateUserRequest request) {
 
-        User createUser = userManager.createUser(user);
+        GetUserResponse userResponse = userManager.createUser(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET,
         produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity<GetUserResponse> getUser(@PathVariable("userId") Long userId) {
 
-        User user = userManager.getUser(userId);
+        GetUserResponse userResponse = userManager.getUser(userId);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET,
         produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getAllUsers() {
+    public ResponseEntity<List<GetUserResponse>> getAllUsers() {
 
-        List<User> users = userManager.getAllUsers();
+        List<GetUserResponse> userResponseList = userManager.getAllUsers();
 
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(userResponseList, HttpStatus.OK);
     }
 
 

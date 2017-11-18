@@ -1,58 +1,68 @@
 package com.jedakah.drunkards.manager.impl;
 
+import com.jedakah.drunkards.converters.EventConverter;
 import com.jedakah.drunkards.entity.Event;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.repository.EventRepository;
+import com.jedakah.drunkards.to.event.CreateEventRequest;
+import com.jedakah.drunkards.to.event.GetEventResponse;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Slf4j
 @Profile("prod")
 @Component
+@RequiredArgsConstructor
 public class EventManagerImpl implements EventManager {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+    private final EventConverter eventConverter;
 
     @Override
-    public Event getEvent(Long eventId) {
+    public GetEventResponse getEvent(Long eventId) {
 
         log.debug("Get Event by id: {}", eventId);
         Event event = eventRepository.findOne(eventId);
-        log.debug("Event was found: {}", event);
+        GetEventResponse response = eventConverter.convertEvent(event);
+        log.debug("Event was found: {}", response);
 
-        return event;
+        return response;
     }
 
     @Override
-    public List<Event> getAllEvents() {
+    public List<GetEventResponse> getAllEvents() {
 
         log.debug("Get All Events");
         List<Event> events = eventRepository.findAll();
-        log.debug("Found {} Events", events.size());
+        List<GetEventResponse> getEventList = events.stream()
+            .map(eventConverter::convertEvent)
+            .collect(Collectors.toList());
+        log.debug("Found Events: {}", getEventList);
 
-        return events;
+        return getEventList;
     }
 
     @Override
-    public Event createEvent(Event event) {
+    public GetEventResponse createEvent(CreateEventRequest createEventRequest) {
 
-        log.debug("Create Event: {}", event);
-        eventRepository.save(event);
-        log.debug("Event successfully saved");
-        return event;
+        log.debug("Create Event: {}", createEventRequest);
+        Event event = eventConverter.convertRequest(createEventRequest);
+        Event savedEvent = eventRepository.save(event);
+        GetEventResponse getEventResponse = eventConverter.convertEvent(savedEvent);
+        log.debug("Event successfully saved: {}", getEventResponse);
+        return getEventResponse;
     }
 
     @Override
-    public Event updateEvent(Event event) {
+    public GetEventResponse updateEvent(CreateEventRequest event) {
 
         log.debug("Update Event: {}", event);
         // TODO: 11/18/17 update logic
         log.debug("Event successfully updated");
-        return event;
+        return null;
     }
 }

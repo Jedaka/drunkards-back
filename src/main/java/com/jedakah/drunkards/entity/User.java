@@ -8,13 +8,11 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@Builder
 @Entity
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
