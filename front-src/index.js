@@ -9,13 +9,17 @@ import "./index.less";
 import Map from "./components/map/Map";
 import Actions from "./components/buttons/Actions";
 import UserEvent from "./components/event/UserEvent";
+import User from "./components/user/User";
 
 $(document).ready(() => {
-    new Map();
+    const User = new User();
+
+    const Map = new Map();
+
+    User.getUserLocation(Map.setMarkerOnCurrentLocation);
 
     let actions = new Actions();
     let event_component = new UserEvent();
-
     let modal_listeners = event_component.getModalEvents();
 
 

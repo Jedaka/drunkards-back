@@ -17,7 +17,20 @@
         <div class="wrap__modal modal" id="create-event">
             <div class="modal-content">
                 <h4>Создать событие</h4>
-                <p>Тест</p>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="first_name" type="text">
+                        <label for="first_name">Имя</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input id="phone" type="tel">
+                        <label for="phone">Телефон</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <textarea placeholder="Расскажите о себе и о месте, где вы находитесь" id="description" class="materialize-textarea"></textarea>
+                        <label for="description">Описание</label>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="modal-action modal-close waves-effect waves-green btn-flat">Поехали!</button>

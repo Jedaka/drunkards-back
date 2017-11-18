@@ -256,4 +256,9 @@ export default class Map {
             ]
         });
     }
+
+    setMarkerOnCurrentLocation(position) {
+        console.log(this);
+        console.log(position);
+    }
 }

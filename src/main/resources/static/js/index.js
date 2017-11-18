@@ -10287,16 +10287,23 @@ var _UserEvent = __webpack_require__(14);
 
 var _UserEvent2 = _interopRequireDefault(_UserEvent);
 
+var _User = __webpack_require__(34);
+
+var _User2 = _interopRequireDefault(_User);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.$ = window.jQuery = _jquery2.default;
 
 (0, _jquery2.default)(document).ready(function () {
-    new _Map2.default();
+    var User = new User();
+
+    var Map = new Map();
+
+    User.getUserLocation(Map.setMarkerOnCurrentLocation);
 
     var actions = new _Actions2.default();
     var event_component = new _UserEvent2.default();
-
     var modal_listeners = event_component.getModalEvents();
 
     actions.addAction({
@@ -13041,6 +13048,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
@@ -13053,174 +13062,186 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 window.$ = window.jQuery = _jquery2.default;
 
-var Map = function Map(options) {
-    _classCallCheck(this, Map);
+var Map = function () {
+    function Map(options) {
+        _classCallCheck(this, Map);
 
-    options = options || {};
+        options = options || {};
 
-    this._options = Object.assign({}, Map.defaults);
-    this._options.selector = options.selector ? options.selector : Map.defaults.selector;
-    this._options.zoom = options.zoom ? options.zoom : Map.defaults.zoom;
-    this._options.center = options.center ? options.center : Map.defaults.center;
+        this._options = Object.assign({}, Map.defaults);
+        this._options.selector = options.selector ? options.selector : Map.defaults.selector;
+        this._options.zoom = options.zoom ? options.zoom : Map.defaults.zoom;
+        this._options.center = options.center ? options.center : Map.defaults.center;
 
-    this._map = new google.maps.Map(this._options.selector, {
-        center: this._options.center,
-        zoom: this._options.zoom,
-        streetViewControl: false,
-        mapTypeControl: false,
-        disableDefaultUI: true,
-        styles: [{
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#f5f5f5"
+        this._map = new google.maps.Map(this._options.selector, {
+            center: this._options.center,
+            zoom: this._options.zoom,
+            streetViewControl: false,
+            mapTypeControl: false,
+            disableDefaultUI: true,
+            styles: [{
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#f5f5f5"
+                }]
+            }, {
+                "elementType": "labels",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "elementType": "labels.icon",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#616161"
+                }]
+            }, {
+                "elementType": "labels.text.stroke",
+                "stylers": [{
+                    "color": "#f5f5f5"
+                }]
+            }, {
+                "featureType": "administrative.land_parcel",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "administrative.land_parcel",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#bdbdbd"
+                }]
+            }, {
+                "featureType": "administrative.neighborhood",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "poi",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#eeeeee"
+                }]
+            }, {
+                "featureType": "poi",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#757575"
+                }]
+            }, {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#e5e5e5"
+                }]
+            }, {
+                "featureType": "poi.park",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#9e9e9e"
+                }]
+            }, {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "road",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#525252"
+                }]
+            }, {
+                "featureType": "road.arterial",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#525252"
+                }]
+            }, {
+                "featureType": "road.arterial",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#757575"
+                }]
+            }, {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#dadada"
+                }]
+            }, {
+                "featureType": "road.highway",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#525252"
+                }]
+            }, {
+                "featureType": "road.highway",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#616161"
+                }]
+            }, {
+                "featureType": "road.highway.controlled_access",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#525252"
+                }]
+            }, {
+                "featureType": "road.local",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#525252"
+                }]
+            }, {
+                "featureType": "road.local",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#9e9e9e"
+                }]
+            }, {
+                "featureType": "transit.line",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#e5e5e5"
+                }]
+            }, {
+                "featureType": "transit.station",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#eeeeee"
+                }]
+            }, {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#000000"
+                }]
+            }, {
+                "featureType": "water",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#9e9e9e"
+                }]
             }]
-        }, {
-            "elementType": "labels",
-            "stylers": [{
-                "visibility": "off"
-            }]
-        }, {
-            "elementType": "labels.icon",
-            "stylers": [{
-                "visibility": "off"
-            }]
-        }, {
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#616161"
-            }]
-        }, {
-            "elementType": "labels.text.stroke",
-            "stylers": [{
-                "color": "#f5f5f5"
-            }]
-        }, {
-            "featureType": "administrative.land_parcel",
-            "stylers": [{
-                "visibility": "off"
-            }]
-        }, {
-            "featureType": "administrative.land_parcel",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#bdbdbd"
-            }]
-        }, {
-            "featureType": "administrative.neighborhood",
-            "stylers": [{
-                "visibility": "off"
-            }]
-        }, {
-            "featureType": "poi",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#eeeeee"
-            }]
-        }, {
-            "featureType": "poi",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#757575"
-            }]
-        }, {
-            "featureType": "poi.park",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#e5e5e5"
-            }]
-        }, {
-            "featureType": "poi.park",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#9e9e9e"
-            }]
-        }, {
-            "featureType": "road",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#ffffff"
-            }]
-        }, {
-            "featureType": "road",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#525252"
-            }]
-        }, {
-            "featureType": "road.arterial",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#525252"
-            }]
-        }, {
-            "featureType": "road.arterial",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#757575"
-            }]
-        }, {
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#dadada"
-            }]
-        }, {
-            "featureType": "road.highway",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#525252"
-            }]
-        }, {
-            "featureType": "road.highway",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#616161"
-            }]
-        }, {
-            "featureType": "road.highway.controlled_access",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#525252"
-            }]
-        }, {
-            "featureType": "road.local",
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "color": "#525252"
-            }]
-        }, {
-            "featureType": "road.local",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#9e9e9e"
-            }]
-        }, {
-            "featureType": "transit.line",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#e5e5e5"
-            }]
-        }, {
-            "featureType": "transit.station",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#eeeeee"
-            }]
-        }, {
-            "featureType": "water",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#000000"
-            }]
-        }, {
-            "featureType": "water",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "color": "#9e9e9e"
-            }]
-        }]
-    });
-};
+        });
+    }
+
+    _createClass(Map, [{
+        key: "setMarkerOnCurrentLocation",
+        value: function setMarkerOnCurrentLocation(position) {
+            console.log(this);
+            console.log(position);
+        }
+    }]);
+
+    return Map;
+}();
 
 Map.defaults = {
     selector: document.getElementsByClassName("wrap__map")[0],
@@ -13475,9 +13496,9 @@ var Modal = function () {
 
     _createClass(Modal, [{
         key: "openModal",
-        value: function openModal(e) {
-            return function () {
-                (0, _jquery2.default)(".wrap__modal").modal('open');
+        value: function openModal() {
+            return function (e) {
+                (0, _jquery2.default)(Modal.defaults.selector).modal('open');
             };
         }
     }]);
@@ -13490,6 +13511,91 @@ Modal.defaults = {
     fields: {}
 };
 exports.default = Modal;
+
+/***/ }),
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+window.$ = window.jQuery = _jquery2.default;
+
+var User = function () {
+    function User(options) {
+        _classCallCheck(this, User);
+
+        options = options || {};
+
+        this._options = Object.assign({}, Modal.defaults);
+        this._options.location = options.location ? options.location : User.defaults.location;
+    }
+
+    _createClass(User, [{
+        key: "getUserLocation",
+        value: function getUserLocation(callback) {
+            var _this = this;
+
+            if (User.defaults.CAN_GET_USER_LOCATION) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    _this._options.location = { lat: position.coords.latitude, lng: position.coords.longitude };
+
+                    callback(position);
+                });
+            }
+
+            return null;
+        }
+    }, {
+        key: "getUserInfo",
+        value: function getUserInfo() {
+            // AJAX
+        }
+    }]);
+
+    return User;
+}();
+
+User.defaults = {
+    location: null,
+    name: null,
+    phone: null,
+
+    CAN_GET_USER_LOCATION: "geolocation" in navigator
+};
+exports.default = User;
 
 /***/ })
 ],[1]);
