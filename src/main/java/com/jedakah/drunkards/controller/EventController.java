@@ -41,6 +41,7 @@ public class EventController {
         produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<GetEventResponse> stopEvent(@PathVariable("eventId") Long eventId) {
 
+        eventManager.stopEvent(eventId);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 

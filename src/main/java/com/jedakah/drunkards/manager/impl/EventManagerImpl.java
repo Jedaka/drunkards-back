@@ -69,17 +69,37 @@ public class EventManagerImpl implements EventManager {
     }
 
     @Override
-    public Event leaveEvent(Event event) {
-        return null;
+    public GetEventResponse leaveEvent(Long eventId) {
+
+        Event event = eventRepository.findOne(eventId);
+        String userName = SecurityUtils.getUserNameFromSession();
+        User currentUser = userRepository.findByName(userName);
+
+        event.getGuests().remove(currentUser);
+
+        return eventConverter.convertEvent(event);
     }
 
     @Override
-    public Event stopEvent(Event event) {
-        return null;
+    public GetEventResponse stopEvent(Long eventId) {
+
+        Event event = eventRepository.findOne(eventId);
+        event.setEventStatus(EventStatus.COMPLETED);
+
+        //TODO: validate that this event is the current user one's.
+
+        return eventConverter.convertEvent(event);
     }
 
     @Override
-    public Event joinEvent(Event event) {
-        return null;
+    public GetEventResponse joinEvent(Long eventId) {
+
+        Event event = eventRepository.findOne(eventId);
+        String userName = SecurityUtils.getUserNameFromSession();
+        User currentUser = userRepository.findByName(userName);
+
+        event.getGuests().add(currentUser);
+
+        return eventConverter.convertEvent(event);
     }
 }

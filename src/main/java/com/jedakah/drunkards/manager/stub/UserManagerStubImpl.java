@@ -3,11 +3,10 @@ package com.jedakah.drunkards.manager.stub;
 import com.jedakah.drunkards.manager.UserManager;
 import com.jedakah.drunkards.to.user.CreateUserRequest;
 import com.jedakah.drunkards.to.user.GetUserResponse;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 @Profile(value = "stub")
 @Component
@@ -22,6 +21,11 @@ public class UserManagerStubImpl implements UserManager {
         getUserResponse.setName("Vasya Pupkin");
         getUserResponse.setTelephoneNumber("8-800-555-35-35");
         return getUserResponse;
+    }
+
+    @Override
+    public GetUserResponse getCurrentUser() {
+        return getUser(0L);
     }
 
     @Override
