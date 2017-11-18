@@ -6,6 +6,7 @@ import com.jedakah.drunkards.manager.UserManager;
 import com.jedakah.drunkards.to.user.CreateUserRequest;
 import com.jedakah.drunkards.to.user.GetUserResponse;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UserController {
 
     @RequestMapping(value = "", method = RequestMethod.POST,
         consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetUserResponse> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<GetUserResponse> createUser(@RequestBody @Valid CreateUserRequest request) {
 
         GetUserResponse userResponse = userManager.createUser(request);
 

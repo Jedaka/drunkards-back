@@ -18,7 +18,9 @@ import lombok.ToString;
 @Table(name = "drunkard")
 public class User extends AbstractEntity {
 
+  @Column(nullable = false)
   private int age;
+  @Column(nullable = false)
   private String telephoneNumber;
   @Column(nullable = false, unique = true)
   private String name;

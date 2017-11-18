@@ -22,13 +22,16 @@ public class DatabaseFiller implements CommandLineRunner{
   @Override
   public void run(String... strings) throws Exception {
 
-
     CreateUserRequest user1 = new CreateUserRequest();
     user1.setName(HOST);
     user1.setPassword(encoder.encode(HOST));
+    user1.setTelephoneNumber("88005553535");
+    user1.setAge(18);
     CreateUserRequest user2 = new CreateUserRequest();
     user2.setName(GUEST);
     user2.setPassword(encoder.encode(GUEST));
+    user2.setTelephoneNumber("4242");
+    user2.setAge(90);
 
     userManager.createUser(user1);
     userManager.createUser(user2);
