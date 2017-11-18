@@ -4,11 +4,10 @@ import com.jedakah.drunkards.entity.Event;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.event.GetEventResponse;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 @Profile(value = "stub")
 @Component
@@ -56,17 +55,17 @@ public class EventManagerStubImpl implements EventManager {
     }
 
     @Override
-    public Event leaveEvent(Event event) {
+    public GetEventResponse leaveEvent(Long eventId) {
         return null;
     }
 
     @Override
-    public Event stopEvent(Event event) {
+    public GetEventResponse stopEvent(Long eventId) {
         return null;
     }
 
     @Override
-    public Event joinEvent(Event event) {
+    public GetEventResponse joinEvent(Long eventId) {
         return null;
     }
 }

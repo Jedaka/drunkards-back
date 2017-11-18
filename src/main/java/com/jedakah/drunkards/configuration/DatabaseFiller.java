@@ -1,6 +1,5 @@
 package com.jedakah.drunkards.configuration;
 
-import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.UserManager;
 import com.jedakah.drunkards.to.user.CreateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
