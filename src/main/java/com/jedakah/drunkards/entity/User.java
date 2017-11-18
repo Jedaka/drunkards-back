@@ -1,5 +1,6 @@
 package com.jedakah.drunkards.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,10 +23,12 @@ public class User extends AbstractEntity {
   @OneToMany(
       mappedBy = "host",
       fetch = FetchType.LAZY)
+  @ApiModelProperty(hidden = true)
   private List<Event> hostEvents;
   @ManyToMany(
       mappedBy = "guests",
       fetch = FetchType.LAZY)
+  @ApiModelProperty(hidden = true)
   private List<Event> guestEvents;
 
 }
