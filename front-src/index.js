@@ -4,12 +4,27 @@ window.$ = window.jQuery = $;
 import "materialize-css/dist/js/materialize.min";
 import "materialize-css/dist/css/materialize.min.css";
 
-import React from "react";
-import ReactDOM from "react-dom";
+import "./index.less";
 
-import App from "./components/App";
+import Map from "./components/map/Map";
+import Actions from "./components/buttons/Actions";
+import UserEvent from "./components/event/UserEvent";
 
-ReactDOM.render(
-    <App />,
-    document.getElementById("app")
-);
+$(document).ready(() => {
+    new Map();
+
+    let actions = new Actions();
+    let event_component = new UserEvent();
+
+    let modal_listeners = event_component.getModalEvents();
+
+    actions.addAction({
+        type: "floaty",
+        onClick: modal_listeners.open()
+    });
+
+    actions.addAction({
+        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full",
+        text: "Найти Событие"
+    })
+});

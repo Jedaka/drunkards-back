@@ -18,27 +18,34 @@ body {
   width: 100%;
   height: 100%;
 }
-.map {
+.wrap {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+.wrap__map {
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
+  top: 0;
   bottom: 0;
 }
-.buttons {
+.wrap__action-buttons-btn {
+  margin-bottom: 3%;
+}
+.wrap__action-buttons-btn:last-child {
+  margin-bottom: 0;
+}
+.wrap__action-buttons-btn--full {
+  width: 100%;
+}
+.wrap__action-buttons {
   display: flex;
-  flex-flow: column nowrap;
   align-items: flex-end;
+  flex-flow: column nowrap;
   position: absolute;
-  bottom: 3.7481%;
-  width: 100%;
-  padding: 0 4% 0 4%;
-}
-.buttons__btn {
-  width: 100%;
-  margin-bottom: 2%;
-}
-.buttons__btn--large-thin {
-  font-weight: 300;
-  font-size: 1.5rem;
+  bottom: 3%;
+  padding: 0 4%;
+  left: 0;
+  right: 0;
 }
