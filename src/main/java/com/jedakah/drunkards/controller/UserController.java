@@ -2,6 +2,7 @@ package com.jedakah.drunkards.controller;
 
 import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.UserManager;
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

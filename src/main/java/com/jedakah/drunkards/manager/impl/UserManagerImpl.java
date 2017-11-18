@@ -3,6 +3,7 @@ package com.jedakah.drunkards.manager.impl;
 import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.UserManager;
 import com.jedakah.drunkards.repository.UserRepository;
+import com.jedakah.drunkards.security.AuthenticationFacade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,17 @@ import org.springframework.stereotype.Service;
 public class UserManagerImpl implements UserManager {
 
   private final UserRepository userRepository;
+  private final AuthenticationFacade authenticationFacade;
 
   @Override
   public User getUser(Long userId) {
 
     log.debug("Get User by id: {}", userId);
+
+//    if (userId == 0) {
+//      authenticationFacade.getAuthentication().;
+//    }
+
     User foundUser = userRepository.findOne(userId);
     log.debug("User was found: {}", foundUser);
 
