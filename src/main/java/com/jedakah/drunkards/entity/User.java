@@ -25,11 +25,11 @@ public class User extends AbstractEntity {
   private String password;
   @OneToMany(
       mappedBy = "host",
-      fetch = FetchType.LAZY)
+      fetch = FetchType.EAGER)
   private List<Event> hostEvents;
   @ManyToMany(
       mappedBy = "guests",
-      fetch = FetchType.LAZY)
+      fetch = FetchType.EAGER)
   private List<Event> guestEvents;
 
 }

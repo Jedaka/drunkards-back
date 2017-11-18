@@ -20,10 +20,10 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class Event extends AbstractEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "host_id")
   private User host;
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "event_user",
       joinColumns = @JoinColumn(name = "event_id"),

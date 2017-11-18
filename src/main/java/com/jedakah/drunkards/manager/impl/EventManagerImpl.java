@@ -76,7 +76,7 @@ public class EventManagerImpl implements EventManager {
         User currentUser = userRepository.findByName(userName);
 
         event.getGuests().remove(currentUser);
-
+        eventRepository.save(event);
         return eventConverter.convertEvent(event);
     }
 
@@ -99,7 +99,7 @@ public class EventManagerImpl implements EventManager {
         User currentUser = userRepository.findByName(userName);
 
         event.getGuests().add(currentUser);
-
+        eventRepository.save(event);
         return eventConverter.convertEvent(event);
     }
 }

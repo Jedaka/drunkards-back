@@ -34,22 +34,24 @@ public class EventController {
         produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<GetEventResponse> leaveEvent(@PathVariable("eventId") Long eventId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        GetEventResponse getEventResponse = eventManager.leaveEvent(eventId);
+        return ResponseEntity.status(HttpStatus.OK).body(getEventResponse);
     }
 
     @RequestMapping(value = "/{eventId}/stop", method = RequestMethod.POST,
         produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<GetEventResponse> stopEvent(@PathVariable("eventId") Long eventId) {
 
-        eventManager.stopEvent(eventId);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        GetEventResponse getEventResponse = eventManager.stopEvent(eventId);
+        return ResponseEntity.status(HttpStatus.OK).body(getEventResponse);
     }
 
     @RequestMapping(value = "/{eventId}/join", method = RequestMethod.POST,
         produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<GetEventResponse> joinEvent(@PathVariable("eventId") Long eventId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        GetEventResponse getEventResponse = eventManager.joinEvent(eventId);
+        return ResponseEntity.status(HttpStatus.OK).body(getEventResponse);
     }
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET,
