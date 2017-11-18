@@ -60,11 +60,17 @@ public class EventManagerImpl implements EventManager {
     }
 
     @Override
-    public GetEventResponse updateEvent(CreateEventRequest event) {
+    public Event leaveEvent(Event event) {
+        return null;
+    }
 
-        log.debug("Update Event: {}", event);
-        // TODO: 11/18/17 update logic
-        log.debug("Event successfully updated");
+    @Override
+    public Event stopEvent(Event event) {
+        return null;
+    }
+
+    @Override
+    public Event joinEvent(Event event) {
         return null;
     }
 }
