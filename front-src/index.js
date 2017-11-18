@@ -22,7 +22,7 @@ $(document).ready(() => {
     let event_component = new UserEvent();
     let modal_listeners = event_component.getModalEvents();
 
-    var position = getMarkers(map);
+    getMarkers(map);
 
     actions.addAction({
         type: "floaty",
@@ -42,17 +42,24 @@ function getMarkers(map) {
   }).done(function callback(json) {
     console.log(json)
     for(let i = 0; i < json.length; i++) {
-      placeMarkers(
-          map.getMap(),
-          new google.maps.LatLng(
-              parseFloat(json[i].latitude),
-              parseFloat(json[i].longitude)
-          ))
+      if (json[i].eventStatus === "ACTIVE") {
+        placeMarkers(
+            map.getMap(),
+            new google.maps.LatLng(
+                parseFloat(json[i].latitude),
+                parseFloat(json[i].longitude)
+            ),
+            {
+              host: json[i].hostUserName,
+              guests: json[i].guestList,
+              description: json[i].description
+            })
+      }
     }
   })
 }
 
-function placeMarkers(map, position) {
+function placeMarkers(map, position, info) {
 
   console.log("Position, ", position)
   console.log("map, ", map)
@@ -60,5 +67,13 @@ function placeMarkers(map, position) {
   var marker = new google.maps.Marker({
     position: position,
     map: map
+  });
+
+  var infowindow = new google.maps.InfoWindow({
+    content: info.host + " " + info.description
+  });
+
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
   });
 }

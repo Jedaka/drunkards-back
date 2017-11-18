@@ -78,6 +78,7 @@ public class DatabaseFiller implements CommandLineRunner {
 
     Event event1 = new Event();
     event1.setHost(userRepository.findByName(HOST2));
+    event1.setDescription("4 этаж, квартира 52");
     event1.setLocation(location1);
     event1.setEventStatus(Event.EventStatus.ACTIVE);
 
