@@ -1,4 +1,4 @@
-package com.jedakah.drunkards.drunkardscore;
+package com.jedakah.drunkards;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
