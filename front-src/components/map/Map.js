@@ -256,4 +256,35 @@ export default class Map {
             ]
         });
     }
+
+    getMap() {
+        return this._map;
+    }
+
+    setZoom(zoom) {
+        this._options.zoom = zoom;
+        this._map.setZoom(zoom);
+    }
+
+    setCenter(coords) {
+        this._options.center = coords;
+        this._map.setCenter(coords);
+    }
+
+    setMarkerOnCurrentLocation(inst, position) {
+        new google.maps.Marker({
+            map: inst.getMap(),
+            position: {lat: position.coords.latitude, lng: position.coords.longitude},
+            icon: {
+                url: "/assets/img/current.svg",
+                scaledSize: new google.maps.Size(20, 20),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(10, 10),
+                scale: 1
+            }
+        });
+
+        inst.setCenter({lat: position.coords.latitude, lng: position.coords.longitude});
+        inst.setZoom(13);
+    }
 }

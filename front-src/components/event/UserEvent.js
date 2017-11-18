@@ -17,7 +17,7 @@ export default class UserEvent {
     constructor(options) {
         options = options || {};
 
-        this._options = Object.assign({}, Event.defaults);
+        this._options = Object.assign({}, UserEvent.defaults);
 
         this._modal = new Modal();
     }

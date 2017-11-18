@@ -10,11 +10,13 @@ import com.jedakah.drunkards.repository.EventRepository;
 import com.jedakah.drunkards.repository.UserRepository;
 import com.jedakah.drunkards.security.SecurityUtils;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
-import com.jedakah.drunkards.to.event.EventsFilter;
+import com.jedakah.drunkards.to.event.EventFilter;
 import com.jedakah.drunkards.to.event.GetEventResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -47,8 +49,8 @@ public class EventManagerImpl implements EventManager {
         log.debug("Get All Events");
         List<Event> events = eventRepository.findAll();
         List<GetEventResponse> getEventList = events.stream()
-            .map(eventConverter::convertEvent)
-            .collect(Collectors.toList());
+                .map(eventConverter::convertEvent)
+                .collect(Collectors.toList());
         log.debug("Found Events: {}", getEventList);
 
         return getEventList;
@@ -59,6 +61,8 @@ public class EventManagerImpl implements EventManager {
 
         log.debug("Create Event: {}", createEventRequest);
         Event event = eventConverter.convertRequest(createEventRequest);
+
+        validateLocation(event.getLocation());
 
         String userName = SecurityUtils.getUserNameFromSession();
         User currentUser = userRepository.findByName(userName);
@@ -141,20 +145,29 @@ public class EventManagerImpl implements EventManager {
             throw new ValidationException("Current user have not completed events");
         }
 
+        if (event.getEventStatus() == EventStatus.COMPLETED) {
+            throw new ValidationException("User can not join this event cause it is completed");
+        }
+
+
         event.getGuests().add(currentUser);
         eventRepository.save(event);
         return eventConverter.convertEvent(event);
     }
 
     @Override
-    public List<GetEventResponse> getEventsByFilter(EventsFilter eventsFilter) {
+    public List<GetEventResponse> getEventsByFilter(EventFilter eventFilter) {
 
-        log.debug("Get Events By Filter: {}", eventsFilter);
+        validateEventFilter(eventFilter);
+
+        log.debug("Get Events By Filter: {}", eventFilter);
+
         List<Event> events = eventRepository.findAll();
         List<GetEventResponse> getEventList = events.stream()
-                .filter(eventsFilter::isEventInRadius)
+                .filter(eventFilter::isEventInRadius)
                 .map(eventConverter::convertEvent)
                 .collect(Collectors.toList());
+
         log.debug("Found Events: {}", getEventList);
 
         return getEventList;
@@ -167,9 +180,36 @@ public class EventManagerImpl implements EventManager {
         allEvents.addAll(user.getHostEvents());
 
         long countOfNotCompletedEvents = allEvents.stream()
-            .filter(event -> event.getEventStatus() == EventStatus.ACTIVE)
-            .count();
+                .filter(event -> event.getEventStatus() == EventStatus.ACTIVE)
+                .count();
 
         return countOfNotCompletedEvents > 0;
+    }
+
+    private void validateEventFilter(EventFilter eventFilter) {
+        try {
+            log.debug("Start validating eventFilter: {}", eventFilter);
+
+            Double.parseDouble(eventFilter.getLat());
+            Double.parseDouble(eventFilter.getLng());
+            Double.parseDouble(eventFilter.getRadiusInMeters());
+
+            log.debug("Event filter is valid");
+        } catch (Exception e) {
+            throw new ValidationException("Invalid event filter");
+        }
+    }
+
+    private void validateLocation(Event.Location location) {
+        try {
+            log.debug("Start validating location: {}", location);
+
+            Double.parseDouble(location.getLatitude());
+            Double.parseDouble(location.getLongitude());
+
+            log.debug("Location is valid");
+        } catch (Exception e) {
+            throw new ValidationException("Invalid location");
+        }
     }
 }

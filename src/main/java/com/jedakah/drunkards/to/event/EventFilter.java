@@ -9,7 +9,7 @@ import static java.lang.Math.*;
 
 
 @Data
-public class EventsFilter {
+public class EventFilter {
 
     private static final double EARTH_RADIUS = 6371000;
 

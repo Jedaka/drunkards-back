@@ -7,16 +7,19 @@ import "./index.less";
 import Map from "./components/map/Map";
 import Actions from "./components/buttons/Actions";
 import UserEvent from "./components/event/UserEvent";
+import User from "./components/user/User";
 
 window.$ = window.jQuery = $;
 
 $(document).ready(() => {
+    const user = new User();
 
-    var map = new Map();
+    const map = new Map();
+
+    user.getUserLocation(map, map.setMarkerOnCurrentLocation);
 
     let actions = new Actions();
     let event_component = new UserEvent();
-
     let modal_listeners = event_component.getModalEvents();
 
     var position = getMarkers();
