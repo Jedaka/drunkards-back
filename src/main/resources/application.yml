@@ -11,3 +11,8 @@ spring:
     password: postgres
   profiles:
     active: ${profile:stub}
+logging:
+  level:
+    root: warn
+    com:
+      jedakah: debug
