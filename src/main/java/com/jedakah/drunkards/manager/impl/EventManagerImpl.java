@@ -4,12 +4,14 @@ import com.jedakah.drunkards.converters.EventConverter;
 import com.jedakah.drunkards.entity.Event;
 import com.jedakah.drunkards.entity.Event.EventStatus;
 import com.jedakah.drunkards.entity.User;
+import com.jedakah.drunkards.exceptions.ValidationException;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.repository.EventRepository;
 import com.jedakah.drunkards.repository.UserRepository;
 import com.jedakah.drunkards.security.SecurityUtils;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.event.GetEventResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +62,10 @@ public class EventManagerImpl implements EventManager {
         String userName = SecurityUtils.getUserNameFromSession();
         User currentUser = userRepository.findByName(userName);
 
+        if (haveNotCompletedEvents(currentUser)) {
+            throw new ValidationException("User can not create event cause he has not completed events");
+        }
+
         event.setHost(currentUser);
         event.setEventStatus(EventStatus.ACTIVE);
         Event savedEvent = eventRepository.save(event);
@@ -75,6 +81,13 @@ public class EventManagerImpl implements EventManager {
         String userName = SecurityUtils.getUserNameFromSession();
         User currentUser = userRepository.findByName(userName);
 
+        if (!event.getGuests().contains(currentUser)) {
+            throw new ValidationException("User can not leave this event cause he is not a guest");
+        }
+        if (event.getEventStatus() == EventStatus.COMPLETED) {
+            throw new ValidationException("User can not leave this event cause it is completed");
+        }
+
         event.getGuests().remove(currentUser);
         eventRepository.save(event);
         return eventConverter.convertEvent(event);
@@ -84,11 +97,22 @@ public class EventManagerImpl implements EventManager {
     public GetEventResponse stopEvent(Long eventId) {
 
         Event event = eventRepository.findOne(eventId);
+
+        String userName = SecurityUtils.getUserNameFromSession();
+        User currentUser = userRepository.findByName(userName);
+        if (!currentUser.getHostEvents().contains(event)) {
+            throw new ValidationException("Current user is not a host of this event");
+        }
+
+        if (event.getEventStatus() == EventStatus.COMPLETED) {
+            throw new ValidationException("Event is already in completed state");
+        }
+
         event.setEventStatus(EventStatus.COMPLETED);
 
-        //TODO: validate that this event is the current user one's.
+        Event savedEvent = eventRepository.save(event);
 
-        return eventConverter.convertEvent(event);
+        return eventConverter.convertEvent(savedEvent);
     }
 
     @Override
@@ -98,8 +122,33 @@ public class EventManagerImpl implements EventManager {
         String userName = SecurityUtils.getUserNameFromSession();
         User currentUser = userRepository.findByName(userName);
 
+        if (event.getHost().equals(currentUser)) {
+            throw new ValidationException("Current user can not join his own event as guest");
+        }
+
+        if (event.getGuests().contains(currentUser)) {
+            throw new ValidationException("Current user is already a guest in this event");
+        }
+
+        if (haveNotCompletedEvents(currentUser)) {
+            throw new ValidationException("Current user have not completed events");
+        }
+
         event.getGuests().add(currentUser);
         eventRepository.save(event);
         return eventConverter.convertEvent(event);
+    }
+
+    private boolean haveNotCompletedEvents(User user) {
+
+        List<Event> allEvents = new ArrayList<>();
+        allEvents.addAll(user.getGuestEvents());
+        allEvents.addAll(user.getHostEvents());
+
+        long countOfNotCompletedEvents = allEvents.stream()
+            .filter(event -> event.getEventStatus() == EventStatus.ACTIVE)
+            .count();
+
+        return countOfNotCompletedEvents > 0;
     }
 }
