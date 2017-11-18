@@ -1,6 +1,5 @@
 package com.jedakah.drunkards.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Embeddable;
@@ -23,7 +22,6 @@ public class Event extends AbstractEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "host_id")
-  @ApiModelProperty(hidden = true)
   private User host;
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
@@ -31,11 +29,9 @@ public class Event extends AbstractEntity {
       joinColumns = @JoinColumn(name = "event_id"),
       inverseJoinColumns = @JoinColumn(name = "drunkard_id")
   )
-  @ApiModelProperty(hidden = true)
   private List<User> guests;
   @Embedded
   private Location location;
-  @ApiModelProperty(hidden = true)
   private Date createdAt;
   private EventStatus eventStatus;
 

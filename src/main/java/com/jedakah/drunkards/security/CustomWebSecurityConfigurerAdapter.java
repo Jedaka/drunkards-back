@@ -47,6 +47,9 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 //        .antMatchers("/swagger-ui.html").permitAll()
         .anyRequest().authenticated()
         .and()
+        .logout().logoutUrl("/logout")
+        .invalidateHttpSession(true).deleteCookies("JSESSIONID").clearAuthentication(true)
+        .and()
 //        .headers().addHeaderWriter()
         .httpBasic();
 //        .authenticationEntryPoint(authenticationEntryPoint);
