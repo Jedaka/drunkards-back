@@ -1,5 +1,5 @@
 package com.jedakah.drunkards.exceptions;
 
-public class EventIsCanceledException {
+public class EventIsCanceledException extends ValidationException {
 
 }
