@@ -22,7 +22,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['env'],
+                        presets: ['env', 'stage-0'],
                         plugins: [require('babel-plugin-transform-object-rest-spread')],
                     }
                 }
@@ -97,11 +97,11 @@ module.exports = {
         }),
         less,
         new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress:{
-                warnings: true
-            }
-        })
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress:{
+        //         warnings: true
+        //     }
+        // })
     ]
 }
 

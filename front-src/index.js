@@ -1,13 +1,30 @@
-import $ from "../node_modules/jquery";
+import $ from "jquery";
 window.$ = window.jQuery = $;
 
-import "../node_modules/materialize-css/dist/js/materialize.min";
-import "../node_modules/materialize-css/dist/css/materialize.min.css";
+import "materialize-css/dist/js/materialize.min";
+import "materialize-css/dist/css/materialize.min.css";
 
-import React from "../node_modules/react";
-import ReactDOM from "../node_modules/react-dom";
+import "./index.less";
 
-ReactDOM.render(
-    <h1>Hello, React!</h1>,
-    document.getElementById("app")
-);
+import Map from "./components/map/Map";
+import Actions from "./components/buttons/Actions";
+import UserEvent from "./components/event/UserEvent";
+
+$(document).ready(() => {
+    new Map();
+
+    let actions = new Actions();
+    let event_component = new UserEvent();
+
+    let modal_listeners = event_component.getModalEvents();
+
+    actions.addAction({
+        type: "floaty",
+        onClick: modal_listeners.open()
+    });
+
+    actions.addAction({
+        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full",
+        text: "Найти Событие"
+    })
+});
