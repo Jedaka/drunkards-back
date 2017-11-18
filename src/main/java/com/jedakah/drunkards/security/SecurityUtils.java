@@ -6,13 +6,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
-  User getCurrentUserFromSession() {
+  public User getCurrentUserFromSession() {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return (User) authentication.getPrincipal();
   }
 
-  String getUserNameFromSession() {
+  public String getUserNameFromSession() {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return authentication.getName();

@@ -3,7 +3,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://91.225.131.201:32768/drunkards
@@ -16,3 +16,6 @@ logging:
     root: warn
     com:
       jedakah: debug
+#    org:
+#      springframework:
+#        security: debug
