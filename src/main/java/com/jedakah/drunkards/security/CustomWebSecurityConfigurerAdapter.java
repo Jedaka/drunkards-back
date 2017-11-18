@@ -27,7 +27,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-//        .antMatchers("/securityNone").permitAll()
+        .antMatchers("/swagger-ui.html").permitAll()
         .anyRequest().authenticated()
         .and()
 //        .headers().addHeaderWriter()
