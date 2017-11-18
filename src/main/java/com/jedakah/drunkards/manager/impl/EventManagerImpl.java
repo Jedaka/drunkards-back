@@ -10,6 +10,7 @@ import com.jedakah.drunkards.repository.EventRepository;
 import com.jedakah.drunkards.repository.UserRepository;
 import com.jedakah.drunkards.security.SecurityUtils;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
+import com.jedakah.drunkards.to.event.EventsFilter;
 import com.jedakah.drunkards.to.event.GetEventResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,13 @@ public class EventManagerImpl implements EventManager {
     @Override
     public GetEventResponse stopEvent(Long eventId) {
 
+        Long currentUserId = SecurityUtils.getCurrentUserFromSession().getUser().getId();
+
         Event event = eventRepository.findOne(eventId);
+        if (!currentUserId.equals(event.getHost().getId())) {
+            throw new ValidationException("Current user is not an owner of requested event");
+        }
+
 
         String userName = SecurityUtils.getUserNameFromSession();
         User currentUser = userRepository.findByName(userName);
@@ -137,6 +144,20 @@ public class EventManagerImpl implements EventManager {
         event.getGuests().add(currentUser);
         eventRepository.save(event);
         return eventConverter.convertEvent(event);
+    }
+
+    @Override
+    public List<GetEventResponse> getEventsByFilter(EventsFilter eventsFilter) {
+
+        log.debug("Get Events By Filter: {}", eventsFilter);
+        List<Event> events = eventRepository.findAll();
+        List<GetEventResponse> getEventList = events.stream()
+                .filter(eventsFilter::isEventInRadius)
+                .map(eventConverter::convertEvent)
+                .collect(Collectors.toList());
+        log.debug("Found Events: {}", getEventList);
+
+        return getEventList;
     }
 
     private boolean haveNotCompletedEvents(User user) {

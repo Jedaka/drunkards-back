@@ -4,16 +4,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
+import com.jedakah.drunkards.to.event.EventsFilter;
 import com.jedakah.drunkards.to.event.GetEventResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/events")
@@ -68,6 +65,19 @@ public class EventController {
     public ResponseEntity<List<GetEventResponse>> getAllEvents() {
 
         List<GetEventResponse> eventResponseList = eventManager.getAllEvents();
+
+        return new ResponseEntity<>(eventResponseList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/filter", method = RequestMethod.GET,
+            produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<GetEventResponse>> getEventsByFilter(@RequestParam(value = "lat") String lat,
+                                                                    @RequestParam(value = "lng") String lng,
+                                                                    @RequestParam(value = "radiusInMeters") String radiusInMeters) {
+
+        EventsFilter eventsFilter = new EventsFilter(lat, lng, radiusInMeters);
+
+        List<GetEventResponse> eventResponseList = eventManager.getEventsByFilter(eventsFilter);
 
         return new ResponseEntity<>(eventResponseList, HttpStatus.OK);
     }
