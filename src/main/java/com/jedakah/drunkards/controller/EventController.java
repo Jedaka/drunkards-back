@@ -4,7 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
-import com.jedakah.drunkards.to.event.EventsFilter;
+import com.jedakah.drunkards.to.event.EventFilter;
 import com.jedakah.drunkards.to.event.GetEventResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +75,9 @@ public class EventController {
                                                                     @RequestParam(value = "lng") String lng,
                                                                     @RequestParam(value = "radiusInMeters") String radiusInMeters) {
 
-        EventsFilter eventsFilter = new EventsFilter(lat, lng, radiusInMeters);
+        EventFilter eventFilter = new EventFilter(lat, lng, radiusInMeters);
 
-        List<GetEventResponse> eventResponseList = eventManager.getEventsByFilter(eventsFilter);
+        List<GetEventResponse> eventResponseList = eventManager.getEventsByFilter(eventFilter);
 
         return new ResponseEntity<>(eventResponseList, HttpStatus.OK);
     }
