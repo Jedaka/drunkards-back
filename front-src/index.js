@@ -18,6 +18,7 @@ $(document).ready(() => {
 
     let modal_listeners = event_component.getModalEvents();
 
+
     actions.addAction({
         type: "floaty",
         onClick: modal_listeners.open()

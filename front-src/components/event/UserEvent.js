@@ -3,6 +3,7 @@ window.$ = window.jQuery = $;
 
 import Modal from "./Modal";
 
+
 export default class UserEvent {
     static defaults = {
         data: {
