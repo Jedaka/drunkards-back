@@ -10287,7 +10287,7 @@ var _UserEvent = __webpack_require__(14);
 
 var _UserEvent2 = _interopRequireDefault(_UserEvent);
 
-var _User = __webpack_require__(34);
+var _User = __webpack_require__(16);
 
 var _User2 = _interopRequireDefault(_User);
 
@@ -10296,11 +10296,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 window.$ = window.jQuery = _jquery2.default;
 
 (0, _jquery2.default)(document).ready(function () {
-    var User = new User();
+    var user = new _User2.default();
 
-    var Map = new Map();
+    var map = new _Map2.default();
 
-    User.getUserLocation(Map.setMarkerOnCurrentLocation);
+    user.getUserLocation(map, map.setMarkerOnCurrentLocation);
 
     var actions = new _Actions2.default();
     var event_component = new _UserEvent2.default();
@@ -13233,10 +13233,39 @@ var Map = function () {
     }
 
     _createClass(Map, [{
+        key: "getMap",
+        value: function getMap() {
+            return this._map;
+        }
+    }, {
+        key: "setZoom",
+        value: function setZoom(zoom) {
+            this._options.zoom = zoom;
+            this._map.setZoom(zoom);
+        }
+    }, {
+        key: "setCenter",
+        value: function setCenter(coords) {
+            this._options.center = coords;
+            this._map.setCenter(coords);
+        }
+    }, {
         key: "setMarkerOnCurrentLocation",
-        value: function setMarkerOnCurrentLocation(position) {
-            console.log(this);
-            console.log(position);
+        value: function setMarkerOnCurrentLocation(inst, position) {
+            new google.maps.Marker({
+                map: inst.getMap(),
+                position: { lat: position.coords.latitude, lng: position.coords.longitude },
+                icon: {
+                    url: "/assets/img/current.svg",
+                    scaledSize: new google.maps.Size(20, 20),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(10, 10),
+                    scale: 1
+                }
+            });
+
+            inst.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
+            inst.setZoom(13);
         }
     }]);
 
@@ -13429,7 +13458,7 @@ var UserEvent = function () {
 
         options = options || {};
 
-        this._options = Object.assign({}, Event.defaults);
+        this._options = Object.assign({}, UserEvent.defaults);
 
         this._modal = new _Modal2.default();
     }
@@ -13498,7 +13527,7 @@ var Modal = function () {
         key: "openModal",
         value: function openModal() {
             return function (e) {
-                (0, _jquery2.default)(Modal.defaults.selector).modal('open');
+                (0, _jquery2.default)(".wrap__modal").modal('open');
             };
         }
     }]);
@@ -13513,25 +13542,7 @@ Modal.defaults = {
 exports.default = Modal;
 
 /***/ }),
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13559,20 +13570,20 @@ var User = function () {
 
         options = options || {};
 
-        this._options = Object.assign({}, Modal.defaults);
+        this._options = Object.assign({}, User.defaults);
         this._options.location = options.location ? options.location : User.defaults.location;
     }
 
     _createClass(User, [{
         key: "getUserLocation",
-        value: function getUserLocation(callback) {
+        value: function getUserLocation(map, callback) {
             var _this = this;
 
             if (User.defaults.CAN_GET_USER_LOCATION) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     _this._options.location = { lat: position.coords.latitude, lng: position.coords.longitude };
 
-                    callback(position);
+                    callback(map, position);
                 });
             }
 

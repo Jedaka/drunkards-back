@@ -24,7 +24,7 @@ export default class Modal {
 
     openModal() {
         return (e) => {
-            $(Modal.defaults.selector).modal('open');
+            $(".wrap__modal").modal('open');
         }
     }
 }

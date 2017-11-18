@@ -12,11 +12,11 @@ import UserEvent from "./components/event/UserEvent";
 import User from "./components/user/User";
 
 $(document).ready(() => {
-    const User = new User();
+    const user = new User();
 
-    const Map = new Map();
+    const map = new Map();
 
-    User.getUserLocation(Map.setMarkerOnCurrentLocation);
+    user.getUserLocation(map, map.setMarkerOnCurrentLocation);
 
     let actions = new Actions();
     let event_component = new UserEvent();
