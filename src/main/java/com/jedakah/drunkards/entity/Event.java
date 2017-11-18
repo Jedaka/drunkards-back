@@ -3,9 +3,13 @@ package com.jedakah.drunkards.entity;
 import java.util.Date;
 import javax.persistence.Entity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-@Entity
 @Data
+@Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Event extends AbstractEntity {
 
   private User host;
@@ -25,3 +29,4 @@ public class Event extends AbstractEntity {
   }
 
 }
+
