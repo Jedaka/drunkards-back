@@ -4,7 +4,6 @@ import com.jedakah.drunkards.converters.UserConverter;
 import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.UserManager;
 import com.jedakah.drunkards.repository.UserRepository;
-import com.jedakah.drunkards.security.AuthenticationFacade;
 import com.jedakah.drunkards.to.user.CreateUserRequest;
 import com.jedakah.drunkards.to.user.GetUserResponse;
 import java.util.List;
@@ -22,7 +21,6 @@ public class UserManagerImpl implements UserManager {
 
   private final UserRepository userRepository;
   private final UserConverter userConverter;
-  private final AuthenticationFacade authenticationFacade;
 
   @Override
   public GetUserResponse getUser(Long userId) {
