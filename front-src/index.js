@@ -12,12 +12,15 @@ window.$ = window.jQuery = $;
 
 $(document).ready(() => {
 
-    new Map();
+    var map = new Map();
 
     let actions = new Actions();
     let event_component = new UserEvent();
 
     let modal_listeners = event_component.getModalEvents();
+
+    var position = getMarkers();
+    placeMarkers(map, position);
 
     actions.addAction({
         type: "floaty",
@@ -42,9 +45,11 @@ function getMarkers() {
 }
 
 
-function getMarkers() {
+function placeMarkers(map, position) {
 
-  var map = new google.maps.Map(document.getElementById('map'), {
+  var myLatLng = {lat: position.latitude, lng: position.longitude}
+
+  var map = new google.maps.Map(map, {
     zoom: 4,
     center: myLatLng
   });
@@ -54,4 +59,6 @@ function getMarkers() {
     map: map,
     title: 'Hello World!'
   });
+
+  marker.setMap(map);
 }
