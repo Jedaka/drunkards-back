@@ -3,6 +3,7 @@ package com.jedakah.drunkards.manager.stub;
 import com.jedakah.drunkards.entity.Event;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
+import com.jedakah.drunkards.to.event.EventsFilter;
 import com.jedakah.drunkards.to.event.GetEventResponse;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,11 @@ public class EventManagerStubImpl implements EventManager {
         getEventResponse.setLongitude("33.33333");
 
         return getEventResponse;
+    }
+
+    @Override
+    public List<GetEventResponse> getEventsByFilter(EventsFilter eventsFilter) {
+        return getAllEvents();
     }
 
     @Override
