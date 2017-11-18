@@ -1,6 +1,8 @@
 package com.jedakah.drunkards.configuration;
 
+import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.manager.UserManager;
+import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.user.CreateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DatabaseFiller implements CommandLineRunner{
+public class DatabaseFiller implements CommandLineRunner {
 
   public static final String HOST = "host";
   public static final String GUEST = "guest";
@@ -19,8 +21,17 @@ public class DatabaseFiller implements CommandLineRunner{
   @Autowired
   UserManager userManager;
 
+  @Autowired
+  EventManager eventManager;
+
   @Override
   public void run(String... strings) throws Exception {
+
+    fillUsers();
+    fillEvents();
+  }
+
+  private void fillUsers() {
 
     CreateUserRequest user1 = new CreateUserRequest();
     user1.setName(HOST);
@@ -35,6 +46,19 @@ public class DatabaseFiller implements CommandLineRunner{
 
     userManager.createUser(user1);
     userManager.createUser(user2);
-
   }
+
+  private void fillEvents() {
+
+    CreateEventRequest event1 = new CreateEventRequest();
+    event1.setLatitude("59.9633625");
+    event1.setLongitude("30.3190594");
+    CreateEventRequest event2 = new CreateEventRequest();
+    event2.setLatitude("59.9672719");
+    event2.setLongitude("30.3349381");
+
+    eventManager.createEvent(event1);
+    eventManager.createEvent(event2);
+  }
+
 }
