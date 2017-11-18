@@ -14,7 +14,7 @@ import java.util.List;
 public class EventManagerStubImpl implements EventManager {
 
     @Override
-    public Event getEvent(String eventId) {
+    public Event getEvent(Long eventId) {
 
         Event event = new Event();
         event.setEventStatus(Event.EventStatus.ACTIVE);
