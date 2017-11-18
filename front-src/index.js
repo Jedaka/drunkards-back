@@ -1,6 +1,4 @@
 import $ from "jquery";
-window.$ = window.jQuery = $;
-
 import "materialize-css/dist/js/materialize.min";
 import "materialize-css/dist/css/materialize.min.css";
 
@@ -10,7 +8,10 @@ import Map from "./components/map/Map";
 import Actions from "./components/buttons/Actions";
 import UserEvent from "./components/event/UserEvent";
 
+window.$ = window.jQuery = $;
+
 $(document).ready(() => {
+
     new Map();
 
     let actions = new Actions();
