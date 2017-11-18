@@ -10,5 +10,4 @@ spring:
     username: postgres
     password: postgres
   profiles:
-    active: stub
-
+    active: ${profile:stub}

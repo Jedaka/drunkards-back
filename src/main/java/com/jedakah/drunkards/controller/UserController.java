@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<User> getUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<User> getUser(@PathVariable("userId") Long userId) {
 
         User user = userManager.getUser(userId);
 

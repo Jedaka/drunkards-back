@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserManager {
 
-    User getUser(String userId);
+    User getUser(Long userId);
     List<User> getAllUsers();
     User createUser(User user);
     User updateUser(User user);

@@ -13,7 +13,7 @@ import java.util.List;
 public class UserManagerStubImpl implements UserManager{
 
     @Override
-    public User getUser(String userId) {
+    public User getUser(Long userId) {
 
         User user = new User();
         user.setTelephoneNumber("8-800-555-35-35");
