@@ -6,7 +6,7 @@ spring:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://91.225.131.201:32768/drunkards2
+    url: jdbc:postgresql://91.225.131.201:32768/drunkards
     username: postgres
     password: postgres
   profiles:
