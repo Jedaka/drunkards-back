@@ -4,9 +4,11 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import lombok.Builder;
 import lombok.Data;
 
 @MappedSuperclass
+@Builder
 @Data
 public class AbstractEntity {
 
