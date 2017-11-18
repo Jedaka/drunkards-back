@@ -22,8 +22,7 @@ $(document).ready(() => {
     let event_component = new UserEvent();
     let modal_listeners = event_component.getModalEvents();
 
-    var position = getMarkers();
-    placeMarkers(map, position);
+    var position = getMarkers(map);
 
     actions.addAction({
         type: "floaty",
@@ -36,32 +35,30 @@ $(document).ready(() => {
     })
 });
 
-function getMarkers() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/api/events', false);
-  xhr.send();
-  if (xhr.status != 200) {
-    alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
-  } else {
-    alert( xhr.responseText ); // responseText -- текст ответа.
-  }
+function getMarkers(map) {
+  $.ajax({
+    method: "GET",
+    url: "api/events"
+  }).done(function callback(json) {
+    console.log(json)
+    for(let i = 0; i < json.length; i++) {
+      placeMarkers(
+          map.getMap(),
+          new google.maps.LatLng(
+              parseFloat(json[i].latitude),
+              parseFloat(json[i].longitude)
+          ))
+    }
+  })
 }
-
 
 function placeMarkers(map, position) {
 
-  var myLatLng = {lat: position.latitude, lng: position.longitude}
-
-  var map = new google.maps.Map(map, {
-    zoom: 4,
-    center: myLatLng
-  });
+  console.log("Position, ", position)
+  console.log("map, ", map)
 
   var marker = new google.maps.Marker({
-    position: myLatLng,
-    map: map,
-    title: 'Hello World!'
+    position: position,
+    map: map
   });
-
-  marker.setMap(map);
 }
