@@ -23,6 +23,7 @@ public class Event extends AbstractEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "host_id")
+  @ApiModelProperty(hidden = true)
   private User host;
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
