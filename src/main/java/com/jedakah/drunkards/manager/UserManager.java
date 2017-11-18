@@ -10,4 +10,5 @@ public interface UserManager {
     List<GetUserResponse> getAllUsers();
     GetUserResponse createUser(CreateUserRequest user);
     GetUserResponse updateUser(CreateUserRequest user);
+    GetUserResponse getCurrentUser();
 }

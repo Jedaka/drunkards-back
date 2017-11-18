@@ -5,13 +5,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
-  public MyUserPrincipal getCurrentUserFromSession() {
+  public static MyUserPrincipal getCurrentUserFromSession() {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return (MyUserPrincipal) authentication.getPrincipal();
   }
 
-  public String getUserNameFromSession() {
+  public static String getUserNameFromSession() {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return authentication.getName();

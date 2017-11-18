@@ -3,8 +3,11 @@ package com.jedakah.drunkards.manager.impl;
 import com.jedakah.drunkards.converters.EventConverter;
 import com.jedakah.drunkards.entity.Event;
 import com.jedakah.drunkards.entity.Event.EventStatus;
+import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.repository.EventRepository;
+import com.jedakah.drunkards.repository.UserRepository;
+import com.jedakah.drunkards.security.SecurityUtils;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.event.GetEventResponse;
 import java.util.List;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Component;
 public class EventManagerImpl implements EventManager {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     private final EventConverter eventConverter;
 
     @Override
@@ -52,6 +56,11 @@ public class EventManagerImpl implements EventManager {
 
         log.debug("Create Event: {}", createEventRequest);
         Event event = eventConverter.convertRequest(createEventRequest);
+
+        String userName = SecurityUtils.getUserNameFromSession();
+        User currentUser = userRepository.findByName(userName);
+
+        event.setHost(currentUser);
         event.setEventStatus(EventStatus.ACTIVE);
         Event savedEvent = eventRepository.save(event);
         GetEventResponse getEventResponse = eventConverter.convertEvent(savedEvent);

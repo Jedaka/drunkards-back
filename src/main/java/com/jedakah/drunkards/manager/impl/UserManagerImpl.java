@@ -4,6 +4,7 @@ import com.jedakah.drunkards.converters.UserConverter;
 import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.manager.UserManager;
 import com.jedakah.drunkards.repository.UserRepository;
+import com.jedakah.drunkards.security.SecurityUtils;
 import com.jedakah.drunkards.to.user.CreateUserRequest;
 import com.jedakah.drunkards.to.user.GetUserResponse;
 import java.util.List;
@@ -27,9 +28,9 @@ public class UserManagerImpl implements UserManager {
 
     log.debug("Get User by id: {}", userId);
 
-//    if (userId == 0) {
-//      authenticationFacade.getAuthentication().;
-//    }
+    if (userId == 0) {
+      return getCurrentUser();
+    }
 
     User foundUser = userRepository.findOne(userId);
     GetUserResponse userResponse = userConverter.convertUser(foundUser);
@@ -69,5 +70,15 @@ public class UserManagerImpl implements UserManager {
     log.debug("Update user: {}", user);
     //TODO: update logic
     return null;
+  }
+
+  @Override
+  public GetUserResponse getCurrentUser() {
+
+    String userName = SecurityUtils.getUserNameFromSession();
+    User currentUser = userRepository.findByName(userName);
+    GetUserResponse getCurrentUserResponse = userConverter.convertUser(currentUser);
+    log.debug("Current user: {}", getCurrentUserResponse);
+    return getCurrentUserResponse;
   }
 }
