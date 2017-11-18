@@ -1,13 +1,15 @@
-import $ from "../node_modules/jquery";
+import $ from "jquery";
 window.$ = window.jQuery = $;
 
-import "../node_modules/materialize-css/dist/js/materialize.min";
-import "../node_modules/materialize-css/dist/css/materialize.min.css";
+import "materialize-css/dist/js/materialize.min";
+import "materialize-css/dist/css/materialize.min.css";
 
-import React from "../node_modules/react";
-import ReactDOM from "../node_modules/react-dom";
+import React from "react";
+import ReactDOM from "react-dom";
+
+import App from "./components/App";
 
 ReactDOM.render(
-    <h1>Hello, React!</h1>,
+    <App />,
     document.getElementById("app")
 );

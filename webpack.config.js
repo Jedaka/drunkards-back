@@ -22,7 +22,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['env'],
+                        presets: ['env', 'stage-0', 'react'],
                         plugins: [require('babel-plugin-transform-object-rest-spread')],
                     }
                 }
