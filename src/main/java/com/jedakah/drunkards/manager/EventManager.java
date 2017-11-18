@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EventManager {
 
-    Event getEvent(String eventId);
+    Event getEvent(Long eventId);
     List<Event> getAllEvents();
     Event createEvent(Event event);
     Event updateEvent(Event event);
