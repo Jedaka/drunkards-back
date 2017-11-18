@@ -2,6 +2,7 @@ package com.jedakah.drunkards.manager.impl;
 
 import com.jedakah.drunkards.converters.EventConverter;
 import com.jedakah.drunkards.entity.Event;
+import com.jedakah.drunkards.entity.Event.EventStatus;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.repository.EventRepository;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
@@ -51,6 +52,7 @@ public class EventManagerImpl implements EventManager {
 
         log.debug("Create Event: {}", createEventRequest);
         Event event = eventConverter.convertRequest(createEventRequest);
+        event.setEventStatus(EventStatus.ACTIVE);
         Event savedEvent = eventRepository.save(event);
         GetEventResponse getEventResponse = eventConverter.convertEvent(savedEvent);
         log.debug("Event successfully saved: {}", getEventResponse);
