@@ -1,9 +1,14 @@
 package com.jedakah.drunkards.exceptions;
 
+import lombok.Data;
+
+@Data
 public class ValidationException extends RuntimeException {
+
+  private String errorMessage;
 
   public ValidationException(String message) {
 
-    super(message);
+    this.errorMessage = message;
   }
 }
