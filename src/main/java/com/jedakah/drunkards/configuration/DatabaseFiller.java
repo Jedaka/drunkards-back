@@ -13,82 +13,75 @@ import org.springframework.stereotype.Service;
 @Service
 public class DatabaseFiller implements CommandLineRunner {
 
-  public static final String HOST = "host";
-  public static final String HOST2 = HOST + "2";
-  public static final String HOST3 = HOST + "3";
-  public static final String GUEST = "guest";
+    public static final String HOST = "host";
+    public static final String GUEST = "guest";
 
-  @Autowired
-  PasswordEncoder encoder;
+    @Autowired
+    PasswordEncoder encoder;
 
-  @Autowired
-  private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-  @Autowired
-  private EventRepository eventRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
-  @Override
-  public void run(String... strings) throws Exception {
+    @Override
+    public void run(String... strings) throws Exception {
 
-    fillUsers();
-    fillEvents();
-  }
+        fillUsers();
+        fillEvents();
+    }
 
-  private void fillUsers() {
+    private void fillUsers() {
 
-    User user1 = new User();
-    user1.setName(HOST);
-    user1.setPassword(encoder.encode(HOST));
-    user1.setTelephoneNumber("88005553535");
-    user1.setAge(18);
+        User host = new User();
+        host.setName(HOST);
+        host.setPassword(encoder.encode(HOST));
+        host.setTelephoneNumber("88005553535");
+        host.setAge(18);
 
-    User user2 = new User();
-    user2.setName(HOST2);
-    user2.setPassword(encoder.encode(HOST2));
-    user2.setTelephoneNumber("89992232110");
-    user2.setAge(20);
+        User guest = new User();
+        guest.setName(GUEST);
+        guest.setPassword(encoder.encode(GUEST));
+        guest.setTelephoneNumber("4242");
+        guest.setAge(90);
 
-    User user3 = new User();
-    user3.setName(HOST3);
-    user3.setPassword(encoder.encode(HOST3));
-    user3.setTelephoneNumber("89992232111");
-    user3.setAge(22);
+        User[] users = new User[10];
 
-    User user4 = new User();
-    user4.setName(GUEST);
-    user4.setPassword(encoder.encode(GUEST));
-    user4.setTelephoneNumber("4242");
-    user4.setAge(90);
+        for (int i = 0; i < 10; i++) {
+            User anotherHost = new User();
+            anotherHost.setName(HOST + i);
+            anotherHost.setPassword(encoder.encode(HOST));
+            anotherHost.setTelephoneNumber("88005553535");
+            anotherHost.setAge(18);
 
-    userRepository.save(user1);
-    userRepository.save(user2);
-    userRepository.save(user3);
-    userRepository.save(user4);
-  }
+            userRepository.save(anotherHost);
+        }
 
-  private void fillEvents() {
+        userRepository.save(host);
+        userRepository.save(guest);
+    }
 
-    Location location1 = new Location();
-    location1.setLatitude("59.9633625");
-    location1.setLongitude("30.3190594");
+    private void fillEvents() {
 
-    Location location2 = new Location();
-    location2.setLatitude("59.9672719");
-    location2.setLongitude("30.3349381");
+        Double baseLat = 59.9;
+        Double baseLng = 30.3;
 
-    Event event1 = new Event();
-    event1.setHost(userRepository.findByName(HOST2));
-    event1.setDescription("4 этаж, квартира 52");
-    event1.setLocation(location1);
-    event1.setEventStatus(Event.EventStatus.ACTIVE);
+        Location[] locations = new Location[10];
 
-    Event event2 = new Event();
-    event2.setHost(userRepository.findByName(HOST3));
-    event2.setLocation(location2);
-    event2.setEventStatus(Event.EventStatus.COMPLETED);
+        for (int i = 0; i < 10; i++) {
+            Location location = new Location();
+            location.setLatitude(String.valueOf(baseLat + Math.random() / 10));
+            location.setLongitude(String.valueOf(baseLng + Math.random() / 10));
 
-    eventRepository.save(event1);
-    eventRepository.save(event2);
-  }
+            Event event = new Event();
+            event.setHost(userRepository.findByName(HOST + i));
+            event.setLocation(location);
+            event.setEventStatus(Event.EventStatus.ACTIVE);
+            event.setDescription("4 этаж, квартира " + i);
+
+            eventRepository.save(event);
+        }
+    }
 
 }
