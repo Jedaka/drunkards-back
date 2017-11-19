@@ -15,6 +15,8 @@ public class UserConverter {
     user.setPassword(createUserRequest.getPassword());
     user.setAge(createUserRequest.getAge());
     user.setTelephoneNumber(createUserRequest.getTelephoneNumber());
+    user.setFirstName(createUserRequest.getFirstName());
+    user.setLastName(createUserRequest.getLastName());
 
     return user;
 
@@ -27,6 +29,8 @@ public class UserConverter {
     getUserResponse.setName(user.getName());
     getUserResponse.setAge(user.getAge());
     getUserResponse.setTelephoneNumber(user.getTelephoneNumber());
+    getUserResponse.setFirstName(user.getFirstName());
+    getUserResponse.setLastName(user.getLastName());
 
     return getUserResponse;
   }

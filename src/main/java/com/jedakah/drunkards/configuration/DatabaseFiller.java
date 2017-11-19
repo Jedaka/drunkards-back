@@ -38,12 +38,16 @@ public class DatabaseFiller implements CommandLineRunner {
         host.setName(HOST);
         host.setPassword(encoder.encode(HOST));
         host.setTelephoneNumber("88005553535");
+        host.setFirstName("Georgiy");
+        host.setLastName("Gorohov");
         host.setAge(18);
 
         User guest = new User();
         guest.setName(GUEST);
         guest.setPassword(encoder.encode(GUEST));
         guest.setTelephoneNumber("4242");
+        guest.setFirstName("Vasya");
+        guest.setLastName("Vas");
         guest.setAge(90);
 
         User[] users = new User[10];
@@ -53,6 +57,8 @@ public class DatabaseFiller implements CommandLineRunner {
             anotherHost.setName(HOST + i);
             anotherHost.setPassword(encoder.encode(HOST));
             anotherHost.setTelephoneNumber("88005553535");
+            anotherHost.setFirstName("Artur");
+            anotherHost.setLastName("Arturov");
             anotherHost.setAge(18);
 
             userRepository.save(anotherHost);

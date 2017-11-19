@@ -10,6 +10,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class UserTO {
 
   @NotEmpty
+  private String firstName;
+
+  @NotEmpty
+  private String lastName;
+
+  @NotEmpty
   private String name;
 
   @NotNull
