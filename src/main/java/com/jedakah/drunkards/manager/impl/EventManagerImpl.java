@@ -82,6 +82,7 @@ public class EventManagerImpl implements EventManager {
                 eventHolder.setActive(true);
                 eventHolder.setHost(true);
                 eventHolder.getEvents().add(eventConverter.convertEvent(optionalHostEvent.get()));
+                return eventHolder;
             }
         }
 
