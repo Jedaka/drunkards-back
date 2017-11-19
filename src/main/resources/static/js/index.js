@@ -10296,51 +10296,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 window.$ = window.jQuery = _jquery2.default;
 
 (0, _jquery2.default)(document).ready(function () {
-  var user = new _User2.default();
+    var user = new _User2.default();
 
-  var map = new _Map2.default();
+    var map = new _Map2.default();
 
-  user.getUserLocation(map, map.setMarkerOnCurrentLocation);
+    user.getUserLocation(map, map.setMarkerOnCurrentLocation);
+    map.setEventMarkers();
 
-  var actions = new _Actions2.default();
-  var event_component = new _UserEvent2.default();
-  var modal_listeners = event_component.getModalEvents();
+    var actions = new _Actions2.default();
+    var event_component = new _UserEvent2.default();
+    var modal_listeners = event_component.getModalEvents();
 
-  var position = getMarkers(map);
+    actions.addAction({
+        type: "floaty",
+        onClick: modal_listeners.open()
+    });
 
-  actions.addAction({
-    type: "floaty",
-    onClick: modal_listeners.open()
-  });
-
-  actions.addAction({
-    className: "wrap__action-buttons-btn wrap__action-buttons-btn--full",
-    text: "Принять Участие"
-  });
+    actions.addAction({
+        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full",
+        text: "Принять Участие"
+    });
 });
-
-function getMarkers(map) {
-  _jquery2.default.ajax({
-    method: "GET",
-    url: "api/events"
-  }).done(function callback(json) {
-    console.log(json);
-    for (var i = 0; i < json.length; i++) {
-      placeMarkers(map.getMap(), new google.maps.LatLng(parseFloat(json[i].latitude), parseFloat(json[i].longitude)));
-    }
-  });
-}
-
-function placeMarkers(map, position) {
-
-  console.log("Position, ", position);
-  console.log("map, ", map);
-
-  var marker = new google.maps.Marker({
-    position: position,
-    map: map
-  });
-}
 
 /***/ }),
 /* 2 */
@@ -13221,6 +13197,8 @@ var Map = function () {
                 }]
             }]
         });
+
+        this._markers = [];
     }
 
     _createClass(Map, [{
@@ -13257,6 +13235,42 @@ var Map = function () {
 
             inst.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
             inst.setZoom(13);
+        }
+    }, {
+        key: "setEventMarkers",
+        value: function setEventMarkers() {
+            var _this = this;
+
+            _jquery2.default.ajax({
+                method: "GET",
+                url: "api/events"
+            }).done(function (json) {
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].eventStatus === "ACTIVE") {
+                        (function () {
+                            var marker = new google.maps.Marker({
+                                position: new google.maps.LatLng(parseFloat(json[i].latitude), parseFloat(json[i].longitude)),
+                                map: _this._map
+                            });
+
+                            var infoWindow = new google.maps.InfoWindow({
+                                content: json[i].hostUserName + " " + json[i].description
+                            });
+
+                            marker.addListener('click', function () {
+                                (0, _jquery2.default)(".wrap__action-buttons-btn").removeClass("disabled");
+                                infoWindow.open(this._map, marker);
+                            });
+
+                            google.maps.event.addListener(infoWindow, 'closeclick', function () {
+                                (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
+                            });
+
+                            _this._markers.push(marker);
+                        })();
+                    }
+                }
+            });
         }
     }]);
 
@@ -13374,7 +13388,7 @@ var Button = function () {
         this._dom = document.createElement("button");
         switch (this._options.type) {
             case "normal":
-                this._dom.className = this._options.className + " btn btn-large orange lighten-2 waves-effect waves-light";
+                this._dom.className = this._options.className + " disabled btn btn-large orange lighten-2 waves-effect waves-light";
                 this._dom.innerHTML = this._options.text;
                 if (this._options.onClick) this._dom.addEventListener("click", this._options.onClick);
                 break;

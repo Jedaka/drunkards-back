@@ -202,6 +202,8 @@ export default class Map {
                 }
             ]
         });
+
+        this._markers = [];
     }
 
     getMap() {
@@ -233,5 +235,37 @@ export default class Map {
 
         inst.setCenter({lat: position.coords.latitude, lng: position.coords.longitude});
         inst.setZoom(13);
+    }
+
+    setEventMarkers() {
+        $.ajax({
+            method: "GET",
+            url: "api/events"
+        }).done((json) => {
+            for(let i = 0; i < json.length; i++) {
+                if (json[i].eventStatus === "ACTIVE") {
+                    let marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat(json[i].latitude), parseFloat(json[i].longitude)),
+                        map: this._map
+                    });
+
+                    let infoWindow = new google.maps.InfoWindow({
+                        content: json[i].hostUserName + " " + json[i].description
+                    });
+
+                    marker.addListener('click', function() {
+                        $(".wrap__action-buttons-btn").removeClass("disabled");
+                        infoWindow.open(this._map, marker);
+                    });
+
+                    google.maps.event.addListener(infoWindow,'closeclick',function() {
+                        $(".wrap__action-buttons-btn").addClass("disabled");
+                    });
+
+                    this._markers.push(marker);
+
+                }
+            }
+        })
     }
 }
