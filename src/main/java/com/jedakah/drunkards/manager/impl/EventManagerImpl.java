@@ -11,16 +11,17 @@ import com.jedakah.drunkards.repository.UserRepository;
 import com.jedakah.drunkards.security.SecurityUtils;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.event.EventFilter;
+import com.jedakah.drunkards.to.event.EventHolder;
 import com.jedakah.drunkards.to.event.GetEventResponse;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Profile("prod")
@@ -44,16 +45,55 @@ public class EventManagerImpl implements EventManager {
     }
 
     @Override
-    public List<GetEventResponse> getAllEvents() {
+    public EventHolder getAllEvents() {
 
         log.debug("Get All Events");
+
+        String userName = SecurityUtils.getUserNameFromSession();
+        User currentUser = userRepository.findByName(userName);
+
+        EventHolder eventHolder = new EventHolder();
+        eventHolder.setEvents(new ArrayList<>());
+        eventHolder.setActive(false);
+        eventHolder.setHost(false);
+
+        if (!CollectionUtils.isEmpty(currentUser.getGuestEvents())) {
+
+            Optional<Event> optionalGuestEvent = currentUser.getGuestEvents().stream()
+                .filter(event -> event.getEventStatus() == EventStatus.ACTIVE)
+                .findAny();
+
+            if (optionalGuestEvent.isPresent()) {
+
+                eventHolder.setActive(true);
+                eventHolder.getEvents().add(eventConverter.convertEvent(optionalGuestEvent.get()));
+                return eventHolder;
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(currentUser.getHostEvents())) {
+
+            Optional<Event> optionalHostEvent = currentUser.getHostEvents().stream()
+                .filter(event -> event.getEventStatus() == EventStatus.ACTIVE)
+                .findAny();
+
+            if (optionalHostEvent.isPresent()) {
+
+                eventHolder.setActive(true);
+                eventHolder.setHost(true);
+                eventHolder.getEvents().add(eventConverter.convertEvent(optionalHostEvent.get()));
+            }
+        }
+
         List<Event> events = eventRepository.findAll();
         List<GetEventResponse> getEventList = events.stream()
                 .map(eventConverter::convertEvent)
                 .collect(Collectors.toList());
         log.debug("Found Events: {}", getEventList);
 
-        return getEventList;
+        eventHolder.setEvents(getEventList);
+
+        return eventHolder;
     }
 
     @Override

@@ -5,12 +5,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import com.jedakah.drunkards.manager.EventManager;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.event.EventFilter;
+import com.jedakah.drunkards.to.event.EventHolder;
 import com.jedakah.drunkards.to.event.GetEventResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/events")
@@ -62,11 +68,11 @@ public class EventController {
 
     @RequestMapping(value = "", method = RequestMethod.GET,
         produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GetEventResponse>> getAllEvents() {
+    public ResponseEntity<EventHolder> getAllEvents() {
 
-        List<GetEventResponse> eventResponseList = eventManager.getAllEvents();
+        EventHolder events = eventManager.getAllEvents();
 
-        return new ResponseEntity<>(eventResponseList, HttpStatus.OK);
+        return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/filter", method = RequestMethod.GET,
