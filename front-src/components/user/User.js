@@ -29,8 +29,4 @@ export default class User {
         return null;
 
     }
-
-    getUserInfo() {
-        // AJAX
-    }
 }

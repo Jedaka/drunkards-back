@@ -25,17 +25,28 @@ export default class Button {
             case "normal":
                 this._dom.className = this._options.className + " disabled btn btn-large orange lighten-2 waves-effect waves-light";
                 this._dom.innerHTML = this._options.text;
-                if (this._options.onClick) this._dom.addEventListener("click", this._options.onClick);
+                if (this._options.onClick) $(this._dom).click(this._options.onClick);
                 break;
             case "floaty":
                 this._dom.className = this._options.className + " btn-floating btn-large orange lighten-2 waves-effect waves-light";
                 this._dom.innerHTML = "<i class='material-icons'>add</i>";
-                if (this._options.onClick) this._dom.addEventListener("click", this._options.onClick);
+                if (this._options.onClick) $(this._dom).click(this._options.onClick);
                 break;
         }
     }
 
     render() {
         return this._dom;
+    }
+
+    getClass() {
+        return "." + this._options.className;
+    }
+
+    changeOnClick(func) {
+        if (this._options.onClick) $(this._dom).off("click");
+        this._options.onClick = func;
+        $(this._dom).click(func);
+
     }
 }

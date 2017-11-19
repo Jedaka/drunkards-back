@@ -17,15 +17,31 @@ $(document).ready(() => {
     const map = new Map();
 
     user.getUserLocation(map, map.setMarkerOnCurrentLocation);
-    map.setEventMarkers();
 
     let actions = new Actions();
-    let event_component = new UserEvent();
+    let event_component = new UserEvent({map: map, user: user});
+
+    event_component.getCurrentState();
+
     let modal_listeners = event_component.getModalEvents();
 
     actions.addAction({
         type: "floaty",
-        onClick: modal_listeners.open()
+        onClick: function() {
+            $(".wrap__state-header").html("Выберите место").fadeTo("fast", 1);
+
+            $(this).fadeTo("fast", 0);
+            map.hideAllMarkers();
+            map.setZoom(map.getMap().getZoom() > 15 ? map.getMap().getZoom() : 15);
+
+            let mainAction = actions.getAction(1);
+            $(mainAction.render()).removeClass("disabled").text("Буду здесь");
+
+            mainAction.changeOnClick(() => {
+                // STATE ON EVENT
+            });
+
+        }
     });
 
     actions.addAction({

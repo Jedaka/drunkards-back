@@ -25,6 +25,18 @@ body {
   right: 0;
   bottom: 0;
 }
+.wrap__state-header {
+  position: absolute;
+  display: block;
+  text-align: center;
+  vertical-align: baseline;
+  top: 3%;
+  left: 4%;
+  right: 4%;
+  opacity: 0;
+  background-color: white;
+  padding: 4% 0;
+}
 .wrap__map {
   width: 100%;
   height: 100%;

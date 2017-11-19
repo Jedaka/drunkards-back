@@ -5,7 +5,10 @@ export default class Modal {
     static defaults = {
         selector: $(".wrap__modal"),
         fields: {
-
+            name: null,
+            phone: null,
+            description: null,
+            location: null
         }
     };
 

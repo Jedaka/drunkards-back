@@ -25,4 +25,8 @@ export default class Actions {
 
         $(this._options.selector).append(this._buttons[this._buttons.length - 1].render());
     }
+
+    getAction(i) {
+        return this._buttons[i];
+    }
 }

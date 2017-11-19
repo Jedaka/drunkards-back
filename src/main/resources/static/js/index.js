@@ -10301,19 +10301,34 @@ window.$ = window.jQuery = _jquery2.default;
     var map = new _Map2.default();
 
     user.getUserLocation(map, map.setMarkerOnCurrentLocation);
-    map.setEventMarkers();
 
     var actions = new _Actions2.default();
-    var event_component = new _UserEvent2.default();
+    var event_component = new _UserEvent2.default({ map: map, user: user });
+
+    event_component.getCurrentState();
+
     var modal_listeners = event_component.getModalEvents();
 
     actions.addAction({
         type: "floaty",
-        onClick: modal_listeners.open()
+        onClick: function onClick() {
+            (0, _jquery2.default)(".wrap__state-header").html("Выберите место").fadeTo("fast", 1);
+
+            (0, _jquery2.default)(this).fadeTo("fast", 0);
+            map.hideAllMarkers();
+            map.setZoom(map.getMap().getZoom() > 15 ? map.getMap().getZoom() : 15);
+
+            var mainAction = actions.getAction(1);
+            (0, _jquery2.default)(mainAction.render()).removeClass("disabled").text("Буду здесь");
+
+            mainAction.changeOnClick(function () {
+                // STATE ON EVENT
+            });
+        }
     });
 
     actions.addAction({
-        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full",
+        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full wrap__action-buttons-btn--main",
         text: "Принять Участие"
     });
 });
@@ -13199,6 +13214,7 @@ var Map = function () {
         });
 
         this._markers = [];
+        this._infoWindow = null;
     }
 
     _createClass(Map, [{
@@ -13238,39 +13254,67 @@ var Map = function () {
         }
     }, {
         key: "setEventMarkers",
-        value: function setEventMarkers() {
+        value: function setEventMarkers(json, event_component) {
             var _this = this;
 
-            _jquery2.default.ajax({
-                method: "GET",
-                url: "api/events"
-            }).done(function (json) {
-                for (var i = 0; i < json.length; i++) {
-                    if (json[i].eventStatus === "ACTIVE") {
-                        (function () {
-                            var marker = new google.maps.Marker({
-                                position: new google.maps.LatLng(parseFloat(json[i].latitude), parseFloat(json[i].longitude)),
-                                map: _this._map
-                            });
+            this.hideAllMarkers();
+            this._markers = [];
 
-                            var infoWindow = new google.maps.InfoWindow({
-                                content: json[i].hostUserName + " " + json[i].description
-                            });
+            var events = json["events"];
 
-                            marker.addListener('click', function () {
-                                (0, _jquery2.default)(".wrap__action-buttons-btn").removeClass("disabled");
-                                infoWindow.open(this._map, marker);
-                            });
+            var _loop = function _loop(i) {
+                if (events[i].eventStatus === "ACTIVE") {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat(events[i].latitude), parseFloat(events[i].longitude)),
+                        map: _this._map
+                    });
 
-                            google.maps.event.addListener(infoWindow, 'closeclick', function () {
-                                (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
-                            });
+                    _this._infoWindow = new google.maps.InfoWindow({
+                        content: events[i].hostUserName + " " + events[i].description
+                    });
 
-                            _this._markers.push(marker);
-                        })();
-                    }
+                    marker.mid = i;
+                    var that = _this;
+                    marker.addListener('click', function () {
+                        var _this2 = this;
+
+                        (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("disabled");
+                        that._infoWindow.open(that._map, marker);
+
+                        (0, _jquery2.default)(".wrap__action-buttons-btn--main").click(function () {
+                            _jquery2.default.ajax({
+                                method: "POST",
+                                url: "api/events/" + events[i].id + "/join"
+                            }).done(function (data) {
+                                that._markers.forEach(function (marker) {
+                                    if (marker.mid !== _this2.mid) {
+                                        marker.setMap(null);
+                                    }
+                                });
+
+                                event_component.setState(1, data);
+                            });
+                        });
+                    });
+
+                    google.maps.event.addListener(_this._infoWindow, 'closeclick', function () {
+                        (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
+                    });
+
+                    _this._markers.push(marker);
                 }
-            });
+            };
+
+            for (var i = 0; i < events.length; i++) {
+                _loop(i);
+            }
+        }
+    }, {
+        key: "hideAllMarkers",
+        value: function hideAllMarkers() {
+            for (var i = 0; i < this._markers.length; i++) {
+                this._markers[i].setMap(null);
+            }
         }
     }]);
 
@@ -13338,6 +13382,11 @@ var Actions = function () {
 
             (0, _jquery2.default)(this._options.selector).append(this._buttons[this._buttons.length - 1].render());
         }
+    }, {
+        key: "getAction",
+        value: function getAction(i) {
+            return this._buttons[i];
+        }
     }]);
 
     return Actions;
@@ -13390,12 +13439,12 @@ var Button = function () {
             case "normal":
                 this._dom.className = this._options.className + " disabled btn btn-large orange lighten-2 waves-effect waves-light";
                 this._dom.innerHTML = this._options.text;
-                if (this._options.onClick) this._dom.addEventListener("click", this._options.onClick);
+                if (this._options.onClick) (0, _jquery2.default)(this._dom).click(this._options.onClick);
                 break;
             case "floaty":
                 this._dom.className = this._options.className + " btn-floating btn-large orange lighten-2 waves-effect waves-light";
                 this._dom.innerHTML = "<i class='material-icons'>add</i>";
-                if (this._options.onClick) this._dom.addEventListener("click", this._options.onClick);
+                if (this._options.onClick) (0, _jquery2.default)(this._dom).click(this._options.onClick);
                 break;
         }
     }
@@ -13404,6 +13453,18 @@ var Button = function () {
         key: "render",
         value: function render() {
             return this._dom;
+        }
+    }, {
+        key: "getClass",
+        value: function getClass() {
+            return "." + this._options.className;
+        }
+    }, {
+        key: "changeOnClick",
+        value: function changeOnClick(func) {
+            if (this._options.onClick) (0, _jquery2.default)(this._dom).off("click");
+            this._options.onClick = func;
+            (0, _jquery2.default)(this._dom).click(func);
         }
     }]);
 
@@ -13464,6 +13525,9 @@ var UserEvent = function () {
         options = options || {};
 
         this._options = Object.assign({}, UserEvent.defaults);
+        this._options.state = options.state ? options.state : UserEvent.defaults.state;
+        this._options.map = options.map ? options.map : UserEvent.defaults.map;
+        this._options.user = options.user ? options.user : UserEvent.defaults.user;
 
         this._modal = new _Modal2.default();
     }
@@ -13476,18 +13540,83 @@ var UserEvent = function () {
 
             };
         }
+    }, {
+        key: "getState",
+        value: function getState() {
+            return this._options.state;
+        }
+    }, {
+        key: "setState",
+        value: function setState(state, json) {
+            this._options.state = state;
+
+            switch (state) {
+                case 0:
+                    this._initInitialState(json);
+                    break;
+                case 1:
+                    this._initActiveState(json);
+                    break;
+            }
+        }
+    }, {
+        key: "_initActiveState",
+        value: function _initActiveState(json) {
+            var _this = this;
+
+            var endpoint = json.host ? "/stop" : "/leave";
+
+            (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("orange lighten-2 disabled").addClass("red darken-3").text("Устал пить...").click(function () {
+                _jquery2.default.ajax({
+                    method: "POST",
+                    url: "api/events/" + json["events"][0].id + endpoint
+                }).done(function (data) {
+                    _this.getCurrentState();
+                });
+            });
+
+            (0, _jquery2.default)(".wrap__state-header").fadeTo("fast", 0, function () {
+                (0, _jquery2.default)(this).html("");
+            });
+
+            (0, _jquery2.default)(".btn-floating").fadeTo("fast", 0, function () {
+                (0, _jquery2.default)(this).css("display", "none");
+            });
+        }
+    }, {
+        key: "_initInitialState",
+        value: function _initInitialState(json) {
+            (0, _jquery2.default)(".wrap__action-buttons-btn--main").addClass("orange lighten-2 disabled").removeClass("red darken-3").text("Принять Участие").off("click");
+
+            (0, _jquery2.default)(".wrap__state-header").fadeTo("fast", 0, function () {
+                (0, _jquery2.default)(this).html("");
+            });
+
+            this._options.map.setEventMarkers(json, this);
+        }
+    }, {
+        key: "getCurrentState",
+        value: function getCurrentState() {
+            var _this2 = this;
+
+            _jquery2.default.ajax({
+                method: "GET",
+                url: "api/events"
+            }).done(function (json) {
+                if (json.active) _this2.setState(1, json);else _this2.setState(0, json);
+
+                _this2._options.map.setEventMarkers(json, _this2);
+            });
+        }
     }]);
 
     return UserEvent;
 }();
 
 UserEvent.defaults = {
-    data: {
-        name: null,
-        phone: null,
-        description: null,
-        location: null
-    }
+    map: null,
+    user: null,
+    state: 0
 };
 exports.default = UserEvent;
 
@@ -13542,7 +13671,12 @@ var Modal = function () {
 
 Modal.defaults = {
     selector: (0, _jquery2.default)(".wrap__modal"),
-    fields: {}
+    fields: {
+        name: null,
+        phone: null,
+        description: null,
+        location: null
+    }
 };
 exports.default = Modal;
 
@@ -13593,11 +13727,6 @@ var User = function () {
             }
 
             return null;
-        }
-    }, {
-        key: "getUserInfo",
-        value: function getUserInfo() {
-            // AJAX
         }
     }]);
 
