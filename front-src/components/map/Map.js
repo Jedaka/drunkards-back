@@ -239,7 +239,6 @@ export default class Map {
     }
 
     setEventMarkers(json, event_component) {
-
         this.hideAllMarkers();
         this._markers = [];
 
@@ -257,30 +256,40 @@ export default class Map {
 
                 marker.mid = i;
                 let that = this;
-                marker.addListener('click', function() {
 
-                    $(".wrap__action-buttons-btn--main").removeClass("disabled");
-                    that._infoWindow.open(that._map, marker);
+                if (event_component.getState() === 0) {
+                    marker.addListener('click', function() {
 
-                    $(".wrap__action-buttons-btn--main").click(() => {
-                        $.ajax({
-                            method: "POST",
-                            url: "api/events/" + events[i].id + "/join"
-                        }).done((data) => {
-                            that._markers.forEach(marker => {
-                                if (marker.mid !== this.mid) {
-                                    marker.setMap(null);
-                                }
+                        $(".wrap__action-buttons-btn--main").removeClass("disabled");
+                        $(".wrap__action-buttons-btn--main").off("click");
+
+                        that._infoWindow.open(that._map, marker);
+
+                        $(".wrap__action-buttons-btn--main").click(() => {
+                            that._infoWindow.close();
+                            that._infoWindow = null;
+
+                            $.ajax({
+                                method: "POST",
+                                url: "api/events/" + events[i].id + "/join"
+                            }).done((data) => {
+                                that._markers.forEach(marker => {
+                                    if (marker.mid !== this.mid) {
+                                        marker.setMap(null);
+                                    }
+                                });
+                                event_component.getCurrentState();
                             });
-
-                            event_component.setState(1, data);
                         });
                     });
-                });
 
-                google.maps.event.addListener(this._infoWindow,'closeclick',function() {
-                    $(".wrap__action-buttons-btn").addClass("disabled");
-                });
+                    google.maps.event.addListener(this._infoWindow,'closeclick',function() {
+                        $(".wrap__action-buttons-btn").addClass("disabled");
+                    });
+
+                } else {
+                    google.maps.event.clearInstanceListeners(marker);
+                }
 
                 this._markers.push(marker);
 

@@ -13275,31 +13275,40 @@ var Map = function () {
 
                     marker.mid = i;
                     var that = _this;
-                    marker.addListener('click', function () {
-                        var _this2 = this;
 
-                        (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("disabled");
-                        that._infoWindow.open(that._map, marker);
+                    if (event_component.getState() === 0) {
+                        marker.addListener('click', function () {
+                            var _this2 = this;
 
-                        (0, _jquery2.default)(".wrap__action-buttons-btn--main").click(function () {
-                            _jquery2.default.ajax({
-                                method: "POST",
-                                url: "api/events/" + events[i].id + "/join"
-                            }).done(function (data) {
-                                that._markers.forEach(function (marker) {
-                                    if (marker.mid !== _this2.mid) {
-                                        marker.setMap(null);
-                                    }
+                            (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("disabled");
+                            (0, _jquery2.default)(".wrap__action-buttons-btn--main").off("click");
+
+                            that._infoWindow.open(that._map, marker);
+
+                            (0, _jquery2.default)(".wrap__action-buttons-btn--main").click(function () {
+                                that._infoWindow.close();
+                                that._infoWindow = null;
+
+                                _jquery2.default.ajax({
+                                    method: "POST",
+                                    url: "api/events/" + events[i].id + "/join"
+                                }).done(function (data) {
+                                    that._markers.forEach(function (marker) {
+                                        if (marker.mid !== _this2.mid) {
+                                            marker.setMap(null);
+                                        }
+                                    });
+                                    event_component.getCurrentState();
                                 });
-
-                                event_component.setState(1, data);
                             });
                         });
-                    });
 
-                    google.maps.event.addListener(_this._infoWindow, 'closeclick', function () {
-                        (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
-                    });
+                        google.maps.event.addListener(_this._infoWindow, 'closeclick', function () {
+                            (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
+                        });
+                    } else {
+                        google.maps.event.clearInstanceListeners(marker);
+                    }
 
                     _this._markers.push(marker);
                 }
@@ -13566,7 +13575,9 @@ var UserEvent = function () {
 
             var endpoint = json.host ? "/stop" : "/leave";
 
-            (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("orange lighten-2 disabled").addClass("red darken-3").text("Устал пить...").click(function () {
+            console.log(json);
+
+            (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("orange lighten-2 disabled").addClass("red darken-3").text("Устал пить...").off("click").click(function () {
                 _jquery2.default.ajax({
                     method: "POST",
                     url: "api/events/" + json["events"][0].id + endpoint
@@ -13591,6 +13602,8 @@ var UserEvent = function () {
             (0, _jquery2.default)(".wrap__state-header").fadeTo("fast", 0, function () {
                 (0, _jquery2.default)(this).html("");
             });
+
+            (0, _jquery2.default)(".btn-floating").fadeTo("fast", 1);
 
             this._options.map.setEventMarkers(json, this);
         }

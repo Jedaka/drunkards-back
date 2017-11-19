@@ -49,10 +49,13 @@ export default class UserEvent {
     _initActiveState(json) {
         let endpoint = json.host ? "/stop" : "/leave";
 
+        console.log(json);
+
         $(".wrap__action-buttons-btn--main")
             .removeClass("orange lighten-2 disabled")
             .addClass("red darken-3")
             .text("Устал пить...")
+            .off("click")
             .click(() => {
                 $.ajax({
                     method: "POST",
@@ -82,6 +85,8 @@ export default class UserEvent {
         $(".wrap__state-header").fadeTo("fast", 0, function() {
             $(this).html("");
         });
+
+        $(".btn-floating").fadeTo("fast", 1);
 
         this._options.map.setEventMarkers(json, this);
     }
