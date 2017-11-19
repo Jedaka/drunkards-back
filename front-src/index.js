@@ -74,6 +74,10 @@ function placeMarkers(map, position, info) {
   });
 
   marker.addListener('click', function() {
+    $(".wrap__action-buttons-btn").removeClass("disabled");
+    // $(".gm-style-iw + div").click(function () {
+    //   $(".wrap__action-buttons-btn").addClass("disabled");
+    // })
     infowindow.open(map, marker);
   });
 }

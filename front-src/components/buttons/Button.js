@@ -1,7 +1,7 @@
 import $ from "jquery";
-window.$ = window.jQuery = $;
-
 import "./Button.less";
+
+window.$ = window.jQuery = $;
 
 export default class Button {
     static defaults = {
@@ -23,7 +23,7 @@ export default class Button {
         this._dom = document.createElement("button");
         switch(this._options.type) {
             case "normal":
-                this._dom.className = this._options.className + " btn btn-large orange lighten-2 waves-effect waves-light";
+                this._dom.className = this._options.className + " disabled btn btn-large orange lighten-2 waves-effect waves-light";
                 this._dom.innerHTML = this._options.text;
                 if (this._options.onClick) this._dom.addEventListener("click", this._options.onClick);
                 break;
