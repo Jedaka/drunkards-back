@@ -226,7 +226,7 @@ export default class Map {
             map: inst.getMap(),
             position: {lat: position.coords.latitude, lng: position.coords.longitude},
             icon: {
-                url: "/assets/img/current.svg",
+                url: "/assets/img/current.png",
                 scaledSize: new google.maps.Size(20, 20),
                 origin: new google.maps.Point(0, 0),
                 anchor: new google.maps.Point(10, 10),
@@ -302,4 +302,9 @@ export default class Map {
             this._markers[i].setMap(null);
         }
     }
+
+    getCenter() {
+        return {lat: this._map.getCenter().lat(), lng: this._map.getCenter().lng()};
+    }
+
 }

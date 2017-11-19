@@ -23,7 +23,7 @@ $(document).ready(() => {
 
     event_component.getCurrentState();
 
-    let modal_listeners = event_component.getModalEvents();
+    let modal = event_component.getModalEvents();
 
     actions.addAction({
         type: "floaty",
@@ -37,8 +37,24 @@ $(document).ready(() => {
             let mainAction = actions.getAction(1);
             $(mainAction.render()).removeClass("disabled").text("Буду здесь");
 
-            mainAction.changeOnClick(() => {
-                // STATE ON EVENT
+            $(".wrap__create-event-marker").fadeTo("fast", 1);
+
+            mainAction.changeOnClick((e) => {
+                event_component.getModal().setLocation(map.getCenter());
+                modal.open();
+
+                event_component.getModal().addEventListener((data) => {
+                    $.ajax({
+                        url: "api/events",
+                        method: "POST",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json"
+                    }).done(() => {
+                        modal.close(),
+                        event_component.getCurrentState();
+                    })
+                });
             });
 
         }
