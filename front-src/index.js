@@ -29,7 +29,7 @@ $(document).ready(() => {
     });
 
     actions.addAction({
-        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full",
+        className: "wrap__action-buttons-btn wrap__action-buttons-btn--full wrap__action-buttons-btn--main",
         text: "Принять Участие"
     })
 });

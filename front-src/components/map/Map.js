@@ -256,30 +256,36 @@ export default class Map {
 
                     marker.addListener('click', () => {
 
-                        $(".wrap__action-buttons-btn").removeClass("disabled");
+                        $(".wrap__action-buttons-btn--main").removeClass("disabled");
                         this._infoWindow.open(this._map, marker);
 
-                      $(".wrap__action-buttons-btn").click(() => {
+                      $(".wrap__action-buttons-btn--main").click(() => {
 
                           $.ajax({
                                 method: "POST",
                                 url: "api/events/" + json[i].id + "/join"
                           }).done((joinResponse) => {
 
-                              console.log("markers: ", this._markers)
                               this._markers.forEach(marker => {
                                 if (marker.mid !== i) {
                                   marker.setMap(null);
                                 }
                               });
 
+                              $(".wrap__action-buttons-btn--main")
+                                    .removeClass("orange lighten-2")
+                                    .addClass("red darken-3")
+
+                              $(".wrap__action-buttons-btn--main")
+                                    .text("Покинуть мероприятие")
                           })
                       });
                     });
 
                     google.maps.event.addListener(this._infoWindow,'closeclick',function() {
-                        $(".wrap__action-buttons-btn").addClass("disabled").off("click");
-
+                        $(".wrap__action-buttons-btn--main")
+                            .addClass("disabled")
+                            .off("click");
                     });
 
                     marker.mid = i;
