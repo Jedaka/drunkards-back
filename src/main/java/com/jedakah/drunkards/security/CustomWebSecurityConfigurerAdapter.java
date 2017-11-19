@@ -32,6 +32,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     DaoAuthenticationProvider authProvider
         = new DaoAuthenticationProvider();
     authProvider.setUserDetailsService(userDetailsService);
+    // TODO: 19.11.2017 remove for vkontakte authorization maybe?
     authProvider.setPasswordEncoder(encoder());
     return authProvider;
   }

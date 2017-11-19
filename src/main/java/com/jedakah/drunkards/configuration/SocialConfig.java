@@ -1,9 +1,5 @@
 package com.jedakah.drunkards.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.boot.autoconfigure.social.SocialAutoConfigurerAdapter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -12,7 +8,6 @@ import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.vkontakte.api.VKontakte;
 import org.springframework.social.vkontakte.connect.VKontakteConnectionFactory;
-import org.springframework.social.vkontakte.security.VKontakteAuthenticationService;
 
 @Configuration
 public class SocialConfig {

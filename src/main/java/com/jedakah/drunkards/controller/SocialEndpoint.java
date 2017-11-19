@@ -10,6 +10,10 @@ package com.jedakah.drunkards.controller;
 //import org.cafejava.boxroom.social.oauth2.SocialUserInfo;
 //import org.cafejava.boxroom.social.oauth2.impl.GoogleSocialInfoConverter;
 //import org.cafejava.boxroom.social.oauth2.impl.VKontakteSocialInfoConverter;
+import static com.jedakah.drunkards.configuration.SocialConfig.CLIENT_ID;
+import static com.jedakah.drunkards.configuration.SocialConfig.CLIENT_SECRET;
+
+import com.jedakah.drunkards.configuration.VKOAuth2Template;
 import java.util.Collections;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -25,6 +29,7 @@ import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Parameters;
+import org.springframework.social.vkontakte.connect.VKontakteOAuth2Template;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,16 +107,27 @@ public class SocialEndpoint {
     }
     String callbackEndpoint = getEndpoint(providerId);
     String callbackURL = buildCallbackURL(callbackEndpoint, CONNECT_PATH, providerId);
+    VKOAuth2Template template = new VKOAuth2Template(CLIENT_ID, CLIENT_SECRET);
+    String authorizationCode = "4/8zKXdGwxrG5Moz3x29jqLFvhT8usoQNSTZO2JUR0JKM#";
+    AccessGrant grant = template.exchangeForAccess(code, callbackURL, null);
+    System.out.println(grant.getAccessToken());
+    System.out.println(grant.getRefreshToken());
+    System.out.println(grant.getScope());
 
-    OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory<?>) factoryLocator
-        .getConnectionFactory(providerId);
-    AccessGrant accessGrant = connectionFactory.getOAuthOperations()
-        .exchangeForAccess(code, callbackURL, null);
+    // TODO: 19.11.2017 create pseudo account
+    // todo: get user info
 
-    Connection<?> connection = connectionFactory.createConnection(accessGrant);
-    ConnectionKey key = connection.getKey();
+//    Authentication authentication = new SocialUserAuthenticationToken (key);
+//
+//    Authentication result = getAuthenticationManager().authenticate(authentication);
+//    OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory<?>) factoryLocator
+//        .getConnectionFactory(providerId);
+//    AccessGrant accessGrant = connectionFactory.getOAuthOperations()
+//        .exchangeForAccess(code, callbackURL, null);
+//
+//    Connection<?> connection = connectionFactory.createConnection(accessGrant);
+//    ConnectionKey key = connection.getKey();
 
-    Long accountId = getAccountId(authentication);
 //    accountService.addSocial(accountId, providerId, key.getProviderUserId());
     //TODO redirect
   }
