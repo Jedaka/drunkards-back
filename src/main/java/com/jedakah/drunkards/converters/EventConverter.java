@@ -5,13 +5,19 @@ import com.jedakah.drunkards.entity.Event.Location;
 import com.jedakah.drunkards.entity.User;
 import com.jedakah.drunkards.to.event.CreateEventRequest;
 import com.jedakah.drunkards.to.event.GetEventResponse;
+import com.jedakah.drunkards.to.user.GetUserResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 @Component
+@RequiredArgsConstructor
 public class EventConverter {
+
+  private final UserConverter userConverter;
 
   public Event convertRequest(CreateEventRequest createEventRequest) {
 
@@ -32,9 +38,13 @@ public class EventConverter {
     getEventResponse.setDescription(event.getDescription());
     getEventResponse.setLatitude(event.getLocation().getLatitude());
     getEventResponse.setLongitude(event.getLocation().getLongitude());
+    getEventResponse.setGuestList(new ArrayList<>());
 
     if (event.getHost() != null) {
       getEventResponse.setHostUserName(event.getHost().getName());
+
+      GetUserResponse host = userConverter.convertUser(event.getHost());
+      getEventResponse.setHost(host);
     }
 
     if (!CollectionUtils.isEmpty(event.getGuests())) {
