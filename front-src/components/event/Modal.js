@@ -39,6 +39,10 @@ export default class Modal {
         });
     }
 
+    getSelector() {
+        return this._options.selector;
+    }
+
     openModal() {
         return $(".wrap__modal").modal('open');
     }

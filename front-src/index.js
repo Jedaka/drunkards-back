@@ -30,7 +30,11 @@ $(document).ready(() => {
         onClick: function() {
             $(".wrap__state-header").html("Выберите место").fadeTo("fast", 1);
 
-            $(this).fadeTo("fast", 0);
+            $(this).removeClass("orange lighten-2").addClass("red").html("<i class='material-icons'>arrow_back</i>").off("click").click(function() {
+                $(this).addClass("orange lighten-2").removeClass("red").off("click").click(actions.getAction(0).getOnClick());
+                event_component.getCurrentState();
+
+            });
             map.hideAllMarkers();
             map.setZoom(map.getMap().getZoom() > 15 ? map.getMap().getZoom() : 15);
 
@@ -51,9 +55,11 @@ $(document).ready(() => {
                         contentType: "application/json; charset=utf-8",
                         dataType: "json"
                     }).done(() => {
-                        modal.close(),
                         event_component.getCurrentState();
-                    })
+
+                        modal.close();
+
+                    });
                 });
             });
 

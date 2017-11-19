@@ -10314,7 +10314,10 @@ window.$ = window.jQuery = _jquery2.default;
         onClick: function onClick() {
             (0, _jquery2.default)(".wrap__state-header").html("Выберите место").fadeTo("fast", 1);
 
-            (0, _jquery2.default)(this).fadeTo("fast", 0);
+            (0, _jquery2.default)(this).removeClass("orange lighten-2").addClass("red").html("<i class='material-icons'>arrow_back</i>").off("click").click(function () {
+                (0, _jquery2.default)(this).addClass("orange lighten-2").removeClass("red").off("click").click(actions.getAction(0).getOnClick());
+                event_component.getCurrentState();
+            });
             map.hideAllMarkers();
             map.setZoom(map.getMap().getZoom() > 15 ? map.getMap().getZoom() : 15);
 
@@ -10335,7 +10338,9 @@ window.$ = window.jQuery = _jquery2.default;
                         contentType: "application/json; charset=utf-8",
                         dataType: "json"
                     }).done(function () {
-                        modal.close(), event_component.getCurrentState();
+                        event_component.getCurrentState();
+
+                        modal.close();
                     });
                 });
             });
@@ -13257,9 +13262,9 @@ var Map = function () {
                 position: { lat: position.coords.latitude, lng: position.coords.longitude },
                 icon: {
                     url: "/assets/img/current.png",
-                    scaledSize: new google.maps.Size(20, 20),
+                    scaledSize: new google.maps.Size(32, 32),
                     origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(10, 10),
+                    anchor: new google.maps.Point(16, 16),
                     scale: 1
                 }
             });
@@ -13281,7 +13286,14 @@ var Map = function () {
                 if (events[i].eventStatus === "ACTIVE") {
                     var marker = new google.maps.Marker({
                         position: new google.maps.LatLng(parseFloat(events[i].latitude), parseFloat(events[i].longitude)),
-                        map: _this._map
+                        map: _this._map,
+                        icon: {
+                            url: "/assets/img/beer.png",
+                            scaledSize: new google.maps.Size(32, 32),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(16, 16),
+                            scale: 1
+                        }
                     });
 
                     _this._infoWindow = new google.maps.InfoWindow({
@@ -13319,7 +13331,7 @@ var Map = function () {
                         });
 
                         google.maps.event.addListener(_this._infoWindow, 'closeclick', function () {
-                            (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
+                            (0, _jquery2.default)(".wrap__action-buttons-btn--main").addClass("disabled");
                         });
                     } else {
                         google.maps.event.clearInstanceListeners(marker);
@@ -13495,6 +13507,11 @@ var Button = function () {
             this._options.onClick = func;
             (0, _jquery2.default)(this._dom).click(func);
         }
+    }, {
+        key: "getOnClick",
+        value: function getOnClick() {
+            return this._options.onClick;
+        }
     }]);
 
     return Button;
@@ -13634,7 +13651,7 @@ var UserEvent = function () {
                 (0, _jquery2.default)(this).css("display", "none");
             });
 
-            (0, _jquery2.default)(".btn-floating").fadeTo("fast", 1);
+            (0, _jquery2.default)(".btn-floating").html("<i class='material-icons'>add</i>").fadeTo("fast", 1);
 
             this._options.map.setEventMarkers(json, this);
         }
@@ -13717,6 +13734,11 @@ var Modal = function () {
                     longitude: _this._data.location.lng
                 });
             });
+        }
+    }, {
+        key: "getSelector",
+        value: function getSelector() {
+            return this._options.selector;
         }
     }, {
         key: "openModal",

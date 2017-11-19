@@ -49,4 +49,8 @@ export default class Button {
         $(this._dom).click(func);
 
     }
+
+    getOnClick() {
+        return this._options.onClick;
+    }
 }

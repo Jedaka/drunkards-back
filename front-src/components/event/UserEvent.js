@@ -96,7 +96,7 @@ export default class UserEvent {
             $(this).css("display", "none");
         });
 
-        $(".btn-floating").fadeTo("fast", 1);
+        $(".btn-floating").html("<i class='material-icons'>add</i>").fadeTo("fast", 1);
 
         this._options.map.setEventMarkers(json, this);
     }
