@@ -1,7 +1,7 @@
 import $ from "jquery";
-window.$ = window.jQuery = $;
-
 import "./Map.less";
+
+window.$ = window.jQuery = $;
 
 export default class Map {
     static defaults = {
@@ -204,6 +204,7 @@ export default class Map {
         });
 
         this._markers = [];
+        this._infoWindow = null;
     }
 
     getMap() {
@@ -249,19 +250,41 @@ export default class Map {
                         map: this._map
                     });
 
-                    let infoWindow = new google.maps.InfoWindow({
+                    this._infoWindow = new google.maps.InfoWindow({
                         content: json[i].hostUserName + " " + json[i].description
                     });
 
-                    marker.addListener('click', function() {
+                    marker.addListener('click', () => {
+
                         $(".wrap__action-buttons-btn").removeClass("disabled");
-                        infoWindow.open(this._map, marker);
+                        this._infoWindow.open(this._map, marker);
+
+                      $(".wrap__action-buttons-btn").click(() => {
+
+                          $.ajax({
+                                method: "POST",
+                                url: "api/events/" + json[i].id + "/join"
+                          }).done((joinResponse) => {
+
+                              console.log("markers: ", this._markers)
+                              this._markers.forEach(marker => {
+                                if (marker.mid !== i) {
+                                  marker.setMap(null);
+                                }
+                              });
+
+                          })
+                      });
                     });
 
-                    google.maps.event.addListener(infoWindow,'closeclick',function() {
-                        $(".wrap__action-buttons-btn").addClass("disabled");
+                    google.maps.event.addListener(this._infoWindow,'closeclick',function() {
+                        $(".wrap__action-buttons-btn").addClass("disabled").off("click");
+
                     });
 
+                    marker.mid = i;
+
+                    console.log(marker);
                     this._markers.push(marker);
 
                 }
