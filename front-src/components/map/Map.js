@@ -257,8 +257,9 @@ export default class Map {
                     }
                 });
 
+                console.log(events[i]);
                 this._infoWindow = new google.maps.InfoWindow({
-                    content: events[i].hostUserName + " " + events[i].description
+                    content: "<div style='line-height: 1.8rem;'><b style='margin-bottom: 5px; font-size: 1.2rem;'>" + events[i].host.firstName + " " + events[i].host.lastName + "</b></div><div style='margin-bottom: 10px;'>" + events[i].description + "</div><div>Количество людей: " + (events[i].guestList.length + 1) + "</div>"
                 });
 
                 marker.mid = i;

@@ -97,11 +97,11 @@ module.exports = {
         }),
         less,
         new webpack.optimize.ModuleConcatenationPlugin(),
-        // new webpack.optimize.UglifyJsPlugin({
-        //     compress:{
-        //         warnings: true
-        //     }
-        // })
+        new webpack.optimize.UglifyJsPlugin({
+            compress:{
+                warnings: true
+            }
+        })
     ]
 }
 

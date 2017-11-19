@@ -67,6 +67,12 @@ export default class UserEvent {
                 })
             });
 
+        $(".wrap__info-box-name").html(json["events"][0].host.firstName + " " + json["events"][0].host.lastName);
+        $(".wrap__info-box-desc").html(json["events"][0].description);
+        $(".wrap__info-box-people").html(json["events"][0].guestList.length + 1);
+        $(".wrap__info-box-phone").html(json["events"][0].host.telephoneNumber);
+        $(".wrap__info-box").fadeTo("fast", 1);
+
         $(".wrap__state-header").fadeTo("fast", 0, function() {
             $(this).html("");
         });
@@ -90,6 +96,11 @@ export default class UserEvent {
 
         $(".wrap__state-header").fadeTo("fast", 0, function() {
             $(this).html("");
+        });
+
+        $(".wrap__info-box").fadeTo("fast", 0, function() {
+            $(this).css("display", "none");
+            $(".wrap__info-box-name, .wrap__info-box-desc, .wrap__info-box-people, .wrap__info-box-phone").html("");
         });
 
         $(".wrap__create-event-marker").fadeTo("fast", 0, function() {

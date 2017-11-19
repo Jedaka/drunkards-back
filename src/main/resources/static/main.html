@@ -12,8 +12,14 @@
 <body>
     <div class="wrap">
         <div class="wrap__map"></div>
-        <h5 class="wrap__state-header z-depth-2"></h5>
+        <h5 class="wrap__state-header z-depth-3"></h5>
 
+        <div class="wrap__info-box z-depth-3">
+            <div class="wrap__info-box-name"></div>
+            <div class="wrap__info-box-desc"></div>
+            <div class="wrap__info-box-people grey-text text-lighten-1"></div>
+            <a href="" class="wrap__info-box-phone"></a>
+        </div>
         <div class="wrap__action-buttons"></div>
 
         <img class="wrap__create-event-marker" src="./assets/img/beer.png" alt="">
@@ -22,14 +28,6 @@
             <div class="modal-content">
                 <h5>Создать событие</h5>
                 <div class="row">
-                    <!--<div class="input-field col s12">-->
-                        <!--<input id="first_name" type="text">-->
-                        <!--<label for="first_name">Имя</label>-->
-                    <!--</div>-->
-                    <!--<div class="input-field col s12">-->
-                        <!--<input id="phone" type="tel">-->
-                        <!--<label for="phone">Телефон</label>-->
-                    <!--</div>-->
                     <div class="input-field col s12">
                         <textarea placeholder="Расскажите о себе и о месте, где вы находитесь" id="description" class="materialize-textarea"></textarea>
                         <label for="description">Описание</label>
@@ -37,7 +35,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-action waves-effect waves-green btn-flat">Поехали!</button>
+                <button class="modal-action waves-effect waves-oranges btn-flat">Поехали!</button>
             </div>
         </div>
     </div>
