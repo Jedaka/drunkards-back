@@ -22,10 +22,14 @@ export default class UserEvent {
         this._modal = new Modal();
     }
 
+    getModal() {
+        return this._modal;
+    }
+
     getModalEvents() {
         return {
             open: this._modal.openModal,
-
+            close: this._modal.closeModal
         }
     }
 
@@ -49,8 +53,6 @@ export default class UserEvent {
     _initActiveState(json) {
         let endpoint = json.host ? "/stop" : "/leave";
 
-        console.log(json);
-
         $(".wrap__action-buttons-btn--main")
             .removeClass("orange lighten-2 disabled")
             .addClass("red darken-3")
@@ -67,6 +69,10 @@ export default class UserEvent {
 
         $(".wrap__state-header").fadeTo("fast", 0, function() {
             $(this).html("");
+        });
+
+        $(".wrap__create-event-marker").fadeTo("fast", 0, function() {
+            $(this).css("display", "none");
         });
 
         $(".btn-floating").fadeTo("fast", 0, function() {
@@ -86,7 +92,11 @@ export default class UserEvent {
             $(this).html("");
         });
 
-        $(".btn-floating").fadeTo("fast", 1);
+        $(".wrap__create-event-marker").fadeTo("fast", 0, function() {
+            $(this).css("display", "none");
+        });
+
+        $(".btn-floating").html("<i class='material-icons'>add</i>").fadeTo("fast", 1);
 
         this._options.map.setEventMarkers(json, this);
     }

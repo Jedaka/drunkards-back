@@ -34,4 +34,7 @@ public class User extends AbstractEntity {
       fetch = FetchType.EAGER)
   private List<Event> guestEvents;
 
+  private String firstName;
+  private String lastName;
+
 }

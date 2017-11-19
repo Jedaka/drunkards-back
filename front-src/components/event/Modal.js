@@ -4,9 +4,9 @@ window.$ = window.jQuery = $;
 export default class Modal {
     static defaults = {
         selector: $(".wrap__modal"),
-        fields: {
-            name: null,
-            phone: null,
+        data: {
+            // name: null,
+            // phone: null,
             description: null,
             location: null
         }
@@ -25,9 +25,46 @@ export default class Modal {
 
     }
 
-    openModal() {
-        return (e) => {
-            $(".wrap__modal").modal('open');
-        }
+    addEventListener(callback) {
+        $(".modal-action").off("click").click(() => {
+            // this.setName($("#first_name").val());
+            // this.setPhone($("#phone").val());
+            this.setDescription($("#description").val());
+
+            callback({
+                description: this._data.description,
+                latitude: this._data.location.lat,
+                longitude: this._data.location.lng
+            });
+        });
     }
+
+    getSelector() {
+        return this._options.selector;
+    }
+
+    openModal() {
+        return $(".wrap__modal").modal('open');
+    }
+
+    closeModal() {
+        return $(".wrap__modal").modal('close');
+    }
+
+    setLocation(obj) {
+        this._data.location = obj;
+    }
+
+    setName(name) {
+        this._data.name = name;
+    }
+
+    setPhone(phone) {
+        this._data.phone = phone;
+    }
+
+    setDescription(text) {
+        this._data.description = text;
+    }
+
 }

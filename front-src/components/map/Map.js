@@ -226,10 +226,10 @@ export default class Map {
             map: inst.getMap(),
             position: {lat: position.coords.latitude, lng: position.coords.longitude},
             icon: {
-                url: "/assets/img/current.svg",
-                scaledSize: new google.maps.Size(20, 20),
+                url: "/assets/img/current.png",
+                scaledSize: new google.maps.Size(32, 32),
                 origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(10, 10),
+                anchor: new google.maps.Point(16, 16),
                 scale: 1
             }
         });
@@ -247,7 +247,14 @@ export default class Map {
             if (events[i].eventStatus === "ACTIVE") {
                 let marker = new google.maps.Marker({
                     position: new google.maps.LatLng(parseFloat(events[i].latitude), parseFloat(events[i].longitude)),
-                    map: this._map
+                    map: this._map,
+                    icon: {
+                        url: "/assets/img/beer.png",
+                        scaledSize: new google.maps.Size(32, 32),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(16, 16),
+                        scale: 1
+                    }
                 });
 
                 this._infoWindow = new google.maps.InfoWindow({
@@ -284,7 +291,7 @@ export default class Map {
                     });
 
                     google.maps.event.addListener(this._infoWindow,'closeclick',function() {
-                        $(".wrap__action-buttons-btn").addClass("disabled");
+                        $(".wrap__action-buttons-btn--main").addClass("disabled");
                     });
 
                 } else {
@@ -302,4 +309,9 @@ export default class Map {
             this._markers[i].setMap(null);
         }
     }
+
+    getCenter() {
+        return {lat: this._map.getCenter().lat(), lng: this._map.getCenter().lng()};
+    }
+
 }

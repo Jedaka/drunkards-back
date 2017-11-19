@@ -23,22 +23,44 @@ $(document).ready(() => {
 
     event_component.getCurrentState();
 
-    let modal_listeners = event_component.getModalEvents();
+    let modal = event_component.getModalEvents();
 
     actions.addAction({
         type: "floaty",
         onClick: function() {
             $(".wrap__state-header").html("Выберите место").fadeTo("fast", 1);
 
-            $(this).fadeTo("fast", 0);
+            $(this).removeClass("orange lighten-2").addClass("red").html("<i class='material-icons'>arrow_back</i>").off("click").click(function() {
+                $(this).addClass("orange lighten-2").removeClass("red").off("click").click(actions.getAction(0).getOnClick());
+                event_component.getCurrentState();
+
+            });
             map.hideAllMarkers();
             map.setZoom(map.getMap().getZoom() > 15 ? map.getMap().getZoom() : 15);
 
             let mainAction = actions.getAction(1);
             $(mainAction.render()).removeClass("disabled").text("Буду здесь");
 
-            mainAction.changeOnClick(() => {
-                // STATE ON EVENT
+            $(".wrap__create-event-marker").fadeTo("fast", 1);
+
+            mainAction.changeOnClick((e) => {
+                event_component.getModal().setLocation(map.getCenter());
+                modal.open();
+
+                event_component.getModal().addEventListener((data) => {
+                    $.ajax({
+                        url: "api/events",
+                        method: "POST",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json"
+                    }).done(() => {
+                        event_component.getCurrentState();
+
+                        modal.close();
+
+                    });
+                });
             });
 
         }

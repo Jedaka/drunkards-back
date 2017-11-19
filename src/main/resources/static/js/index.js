@@ -10307,22 +10307,42 @@ window.$ = window.jQuery = _jquery2.default;
 
     event_component.getCurrentState();
 
-    var modal_listeners = event_component.getModalEvents();
+    var modal = event_component.getModalEvents();
 
     actions.addAction({
         type: "floaty",
         onClick: function onClick() {
             (0, _jquery2.default)(".wrap__state-header").html("Выберите место").fadeTo("fast", 1);
 
-            (0, _jquery2.default)(this).fadeTo("fast", 0);
+            (0, _jquery2.default)(this).removeClass("orange lighten-2").addClass("red").html("<i class='material-icons'>arrow_back</i>").off("click").click(function () {
+                (0, _jquery2.default)(this).addClass("orange lighten-2").removeClass("red").off("click").click(actions.getAction(0).getOnClick());
+                event_component.getCurrentState();
+            });
             map.hideAllMarkers();
             map.setZoom(map.getMap().getZoom() > 15 ? map.getMap().getZoom() : 15);
 
             var mainAction = actions.getAction(1);
             (0, _jquery2.default)(mainAction.render()).removeClass("disabled").text("Буду здесь");
 
-            mainAction.changeOnClick(function () {
-                // STATE ON EVENT
+            (0, _jquery2.default)(".wrap__create-event-marker").fadeTo("fast", 1);
+
+            mainAction.changeOnClick(function (e) {
+                event_component.getModal().setLocation(map.getCenter());
+                modal.open();
+
+                event_component.getModal().addEventListener(function (data) {
+                    _jquery2.default.ajax({
+                        url: "api/events",
+                        method: "POST",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json"
+                    }).done(function () {
+                        event_component.getCurrentState();
+
+                        modal.close();
+                    });
+                });
             });
         }
     });
@@ -13241,10 +13261,10 @@ var Map = function () {
                 map: inst.getMap(),
                 position: { lat: position.coords.latitude, lng: position.coords.longitude },
                 icon: {
-                    url: "/assets/img/current.svg",
-                    scaledSize: new google.maps.Size(20, 20),
+                    url: "/assets/img/current.png",
+                    scaledSize: new google.maps.Size(32, 32),
                     origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(10, 10),
+                    anchor: new google.maps.Point(16, 16),
                     scale: 1
                 }
             });
@@ -13266,7 +13286,14 @@ var Map = function () {
                 if (events[i].eventStatus === "ACTIVE") {
                     var marker = new google.maps.Marker({
                         position: new google.maps.LatLng(parseFloat(events[i].latitude), parseFloat(events[i].longitude)),
-                        map: _this._map
+                        map: _this._map,
+                        icon: {
+                            url: "/assets/img/beer.png",
+                            scaledSize: new google.maps.Size(32, 32),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(16, 16),
+                            scale: 1
+                        }
                     });
 
                     _this._infoWindow = new google.maps.InfoWindow({
@@ -13304,7 +13331,7 @@ var Map = function () {
                         });
 
                         google.maps.event.addListener(_this._infoWindow, 'closeclick', function () {
-                            (0, _jquery2.default)(".wrap__action-buttons-btn").addClass("disabled");
+                            (0, _jquery2.default)(".wrap__action-buttons-btn--main").addClass("disabled");
                         });
                     } else {
                         google.maps.event.clearInstanceListeners(marker);
@@ -13324,6 +13351,11 @@ var Map = function () {
             for (var i = 0; i < this._markers.length; i++) {
                 this._markers[i].setMap(null);
             }
+        }
+    }, {
+        key: "getCenter",
+        value: function getCenter() {
+            return { lat: this._map.getCenter().lat(), lng: this._map.getCenter().lng() };
         }
     }]);
 
@@ -13475,6 +13507,11 @@ var Button = function () {
             this._options.onClick = func;
             (0, _jquery2.default)(this._dom).click(func);
         }
+    }, {
+        key: "getOnClick",
+        value: function getOnClick() {
+            return this._options.onClick;
+        }
     }]);
 
     return Button;
@@ -13542,11 +13579,16 @@ var UserEvent = function () {
     }
 
     _createClass(UserEvent, [{
+        key: "getModal",
+        value: function getModal() {
+            return this._modal;
+        }
+    }, {
         key: "getModalEvents",
         value: function getModalEvents() {
             return {
-                open: this._modal.openModal
-
+                open: this._modal.openModal,
+                close: this._modal.closeModal
             };
         }
     }, {
@@ -13575,8 +13617,6 @@ var UserEvent = function () {
 
             var endpoint = json.host ? "/stop" : "/leave";
 
-            console.log(json);
-
             (0, _jquery2.default)(".wrap__action-buttons-btn--main").removeClass("orange lighten-2 disabled").addClass("red darken-3").text("Устал пить...").off("click").click(function () {
                 _jquery2.default.ajax({
                     method: "POST",
@@ -13588,6 +13628,10 @@ var UserEvent = function () {
 
             (0, _jquery2.default)(".wrap__state-header").fadeTo("fast", 0, function () {
                 (0, _jquery2.default)(this).html("");
+            });
+
+            (0, _jquery2.default)(".wrap__create-event-marker").fadeTo("fast", 0, function () {
+                (0, _jquery2.default)(this).css("display", "none");
             });
 
             (0, _jquery2.default)(".btn-floating").fadeTo("fast", 0, function () {
@@ -13603,7 +13647,11 @@ var UserEvent = function () {
                 (0, _jquery2.default)(this).html("");
             });
 
-            (0, _jquery2.default)(".btn-floating").fadeTo("fast", 1);
+            (0, _jquery2.default)(".wrap__create-event-marker").fadeTo("fast", 0, function () {
+                (0, _jquery2.default)(this).css("display", "none");
+            });
+
+            (0, _jquery2.default)(".btn-floating").html("<i class='material-icons'>add</i>").fadeTo("fast", 1);
 
             this._options.map.setEventMarkers(json, this);
         }
@@ -13671,11 +13719,56 @@ var Modal = function () {
     }
 
     _createClass(Modal, [{
+        key: "addEventListener",
+        value: function addEventListener(callback) {
+            var _this = this;
+
+            (0, _jquery2.default)(".modal-action").off("click").click(function () {
+                // this.setName($("#first_name").val());
+                // this.setPhone($("#phone").val());
+                _this.setDescription((0, _jquery2.default)("#description").val());
+
+                callback({
+                    description: _this._data.description,
+                    latitude: _this._data.location.lat,
+                    longitude: _this._data.location.lng
+                });
+            });
+        }
+    }, {
+        key: "getSelector",
+        value: function getSelector() {
+            return this._options.selector;
+        }
+    }, {
         key: "openModal",
         value: function openModal() {
-            return function (e) {
-                (0, _jquery2.default)(".wrap__modal").modal('open');
-            };
+            return (0, _jquery2.default)(".wrap__modal").modal('open');
+        }
+    }, {
+        key: "closeModal",
+        value: function closeModal() {
+            return (0, _jquery2.default)(".wrap__modal").modal('close');
+        }
+    }, {
+        key: "setLocation",
+        value: function setLocation(obj) {
+            this._data.location = obj;
+        }
+    }, {
+        key: "setName",
+        value: function setName(name) {
+            this._data.name = name;
+        }
+    }, {
+        key: "setPhone",
+        value: function setPhone(phone) {
+            this._data.phone = phone;
+        }
+    }, {
+        key: "setDescription",
+        value: function setDescription(text) {
+            this._data.description = text;
         }
     }]);
 
@@ -13684,9 +13777,9 @@ var Modal = function () {
 
 Modal.defaults = {
     selector: (0, _jquery2.default)(".wrap__modal"),
-    fields: {
-        name: null,
-        phone: null,
+    data: {
+        // name: null,
+        // phone: null,
         description: null,
         location: null
     }
